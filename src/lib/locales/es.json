@@ -1,0 +1,26 @@
+{
+  "welcome": "Bienvenido a Starter",
+  "description": "Una aplicación React moderna con Vite, TanStack Router y shadcn/ui",
+  "about": "Acerca de",
+  "home": "Inicio",
+  "increment": "Incrementar",
+  "decrement": "Decrementar",
+  "reset": "Reiniciar",
+  "features": {
+    "title": "Características",
+    "vite": "Vite para desarrollo y construcción rápida",
+    "react": "React 19 con TypeScript",
+    "router": "TanStack Router para enrutamiento con tipos seguros",
+    "query": "TanStack Query para gestión de estado del servidor",
+    "zustand": "Zustand para gestión de estado del cliente",
+    "ui": "Componentes shadcn/ui con Tailwind CSS",
+    "forms": "React Hook Form con validación Zod",
+    "testing": "Vitest y React Testing Library para pruebas",
+    "e2e": "Playwright para pruebas E2E",
+    "storybook": "Storybook para desarrollo de componentes",
+    "i18n": "i18next para internacionalización",
+    "charts": "Nivo para visualización de datos",
+    "git": "Husky y Commitlint para flujo de trabajo Git",
+    "docker": "Soporte Docker para despliegue"
+  }
+}
