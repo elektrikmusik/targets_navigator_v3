@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubble Chart Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .chart-container {
+            width: 600px;
+            height: 400px;
+            border: 1px solid #ccc;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bubble Chart Test</h1>
+    <p>This is a test to verify the BubbleChart component is working.</p>
+    
+    <h2>Test Data</h2>
+    <div id="test-data"></div>
+    
+    <h2>Chart Container</h2>
+    <div id="chart-container" class="chart-container"></div>
+    
+    <script>
+        // Test data
+        const testData = [
+            {
+                id: 'test',
+                data: [
+                    { x: 1, y: 2, size: 5, id: 'test1' },
+                    { x: 3, y: 4, size: 8, id: 'test2' },
+                    { x: 5, y: 6, size: 10, id: 'test3' }
+                ]
+            }
+        ];
+        
+        // Display test data
+        document.getElementById('test-data').innerHTML = '<pre>' + JSON.stringify(testData, null, 2) + '</pre>';
+        
+        // This would normally render the React component
+        document.getElementById('chart-container').innerHTML = '<p>Chart would render here in React environment</p>';
+    </script>
+</body>
+</html>

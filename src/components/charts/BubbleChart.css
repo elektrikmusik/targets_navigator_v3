@@ -1,0 +1,99 @@
+.bubble-chart-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  min-height: 400px; /* Ensure minimum height for chart visibility */
+}
+
+.bubble-chart-container.has-selection {
+  /* Add a subtle background when a node is selected to enhance focus effect 
+  background: rgba(0, 0, 0, 0);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);*/
+}
+
+.bubble-chart-empty {
+  /* Dynamic height and width will be set via style prop */
+}
+
+/* Basic node styling */
+.bubble-chart-container circle {
+  cursor: pointer;
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* Dim all nodes when a selection is made */
+.bubble-chart-container.has-selection circle {
+  opacity: 0.2;
+}
+
+/* Keep selected node fully visible */
+.bubble-chart-container.has-selection circle[data-selected="true"] {
+  opacity: 1 !important;
+}
+
+/* Custom tooltip styling */
+.bubble-chart-tooltip {
+  background: white;
+  padding: 16px;  /* Increased padding for larger tooltip */
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  max-width: 500px;  /* Increased max width */
+  min-width: 300px;  /* Added minimum width */
+  font-size: 14px;   /* Increased font size */
+  z-index: 1000;
+}
+
+.bubble-chart-tooltip .tooltip-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+
+.bubble-chart-tooltip .tooltip-logo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.bubble-chart-tooltip .tooltip-title {
+  font-weight: bold;
+  color: #111827;
+  flex: 1;
+}
+
+.bubble-chart-tooltip .tooltip-row {
+  margin-bottom: 4px;
+  color: #6b7280;
+}
+
+.bubble-chart-tooltip .tooltip-row strong {
+  color: #374151;
+}
+
+/* Different tooltip sizes */
+.bubble-chart-tooltip.small {
+  max-width: 250px;
+  min-width: 200px;
+  font-size: 11px;
+  padding: 8px;
+}
+
+.bubble-chart-tooltip.large {
+  max-width: 600px;
+  min-width: 400px;
+  font-size: 16px;
+  padding: 20px;
+}
+
+.bubble-chart-tooltip.extra-large {
+  max-width: 800px;
+  min-width: 500px;
+  font-size: 18px;
+  padding: 24px;
+}

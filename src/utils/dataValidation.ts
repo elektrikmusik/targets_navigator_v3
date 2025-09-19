@@ -13,29 +13,32 @@ export const validateWorldData = (
     return { isValid: false, errors }
   }
 
-  if (data.type !== 'FeatureCollection') {
-    errors.push(`Expected type 'FeatureCollection', got '${data.type}'`)
+  const dataObj = data as Record<string, unknown>
+
+  if (dataObj.type !== 'FeatureCollection') {
+    errors.push(`Expected type 'FeatureCollection', got '${dataObj.type}'`)
   }
 
-  if (!Array.isArray(data.features)) {
+  if (!Array.isArray(dataObj.features)) {
     errors.push('Features is not an array')
     return { isValid: false, errors }
   }
 
-  if (data.features.length === 0) {
+  if (dataObj.features.length === 0) {
     errors.push('Features array is empty')
   }
 
   // Check first few features
-  const sampleFeatures = data.features.slice(0, 3)
+  const sampleFeatures = dataObj.features.slice(0, 3)
   sampleFeatures.forEach((feature: unknown, index: number) => {
-    if (!feature.type || feature.type !== 'Feature') {
+    const featureObj = feature as Record<string, unknown>
+    if (!featureObj.type || featureObj.type !== 'Feature') {
       errors.push(`Feature ${index} is not a valid GeoJSON Feature`)
     }
-    if (!feature.geometry) {
+    if (!featureObj.geometry) {
       errors.push(`Feature ${index} is missing geometry`)
     }
-    if (!feature.properties) {
+    if (!featureObj.properties) {
       errors.push(`Feature ${index} is missing properties`)
     }
   })
@@ -53,7 +56,8 @@ export const logDataInfo = (data: unknown, label: string = 'Data') => {
 
   if (validation.isValid) {
     console.log('✅ Data is valid')
-    console.log(`📊 Features count: ${data.features.length}`)
+    const dataObj = data as Record<string, unknown>
+    console.log(`📊 Features count: ${Array.isArray(dataObj.features) ? dataObj.features.length : 0}`)
     console.log(`📏 Data size: ${JSON.stringify(data).length} characters`)
   } else {
     console.error('❌ Data validation failed:')

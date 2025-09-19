@@ -25,3 +25,4 @@ const Switch = React.forwardRef<
 Switch.displayName = SwitchPrimitive.Root.displayName
 
 export { Switch }
+

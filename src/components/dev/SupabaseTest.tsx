@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import {
   testSupabaseConnection,
   testEnvironmentVariables,
@@ -17,8 +17,15 @@ export function SupabaseTest() {
   const [connectionStatus, setConnectionStatus] = useState<
     'idle' | 'testing' | 'success' | 'error'
   >('idle')
-  const [envStatus, setEnvStatus] = useState<unknown>(null)
-  const [testResult, setTestResult] = useState<unknown>(null)
+  const [envStatus, setEnvStatus] = useState<{
+    urlSet: boolean
+    keySet: boolean
+    bothSet: boolean
+  } | null>(null)
+  const [testResult, setTestResult] = useState<{
+    success: boolean
+    error?: string
+  } | null>(null)
 
   useEffect(() => {
     // Check environment variables on mount

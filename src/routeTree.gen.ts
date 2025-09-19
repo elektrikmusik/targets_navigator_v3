@@ -15,6 +15,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as MapRouteImport } from './routes/map'
 import { Route as DemoRouteImport } from './routes/demo'
+import { Route as CompaniesTableRouteImport } from './routes/companies-table'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -48,6 +49,11 @@ const DemoRoute = DemoRouteImport.update({
   path: '/demo',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CompaniesTableRoute = CompaniesTableRouteImport.update({
+  id: '/companies-table',
+  path: '/companies-table',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -62,6 +68,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/companies-table': typeof CompaniesTableRoute
   '/demo': typeof DemoRoute
   '/map': typeof MapRoute
   '/profile': typeof ProfileRoute
@@ -72,6 +79,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/companies-table': typeof CompaniesTableRoute
   '/demo': typeof DemoRoute
   '/map': typeof MapRoute
   '/profile': typeof ProfileRoute
@@ -83,6 +91,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/companies-table': typeof CompaniesTableRoute
   '/demo': typeof DemoRoute
   '/map': typeof MapRoute
   '/profile': typeof ProfileRoute
@@ -95,6 +104,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/companies-table'
     | '/demo'
     | '/map'
     | '/profile'
@@ -105,6 +115,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/companies-table'
     | '/demo'
     | '/map'
     | '/profile'
@@ -115,6 +126,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/companies-table'
     | '/demo'
     | '/map'
     | '/profile'
@@ -126,6 +138,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  CompaniesTableRoute: typeof CompaniesTableRoute
   DemoRoute: typeof DemoRoute
   MapRoute: typeof MapRoute
   ProfileRoute: typeof ProfileRoute
@@ -178,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/companies-table': {
+      id: '/companies-table'
+      path: '/companies-table'
+      fullPath: '/companies-table'
+      preLoaderRoute: typeof CompaniesTableRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -198,6 +218,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  CompaniesTableRoute: CompaniesTableRoute,
   DemoRoute: DemoRoute,
   MapRoute: MapRoute,
   ProfileRoute: ProfileRoute,

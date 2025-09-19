@@ -14,7 +14,7 @@ import {
 import { Sun, Moon, Settings } from 'lucide-react'
 import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
-import { useTheme } from '@/contexts/ThemeContext'
+import { useTheme } from '@/contexts/useTheme'
 import { SupabaseStatus } from '../dev/SupabaseStatus'
 
 interface AppLayoutProps {
