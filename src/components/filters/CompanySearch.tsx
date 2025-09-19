@@ -11,8 +11,8 @@ interface CompanySearchProps {
 export function CompanySearch({
   value,
   onChange,
-  placeholder = "Search companies...",
-  className = ""
+  placeholder = 'Search companies...',
+  className = '',
 }: CompanySearchProps) {
   return (
     <div className={`relative ${className}`}>
@@ -20,7 +20,7 @@ export function CompanySearch({
       <Input
         placeholder={placeholder}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
         className="pl-8"
       />
     </div>

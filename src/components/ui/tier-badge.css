@@ -5,31 +5,31 @@
   --tier-border: #555555;
 }
 
-.tier-badge[data-tier="Tier 1"] {
+.tier-badge[data-tier='Tier 1'] {
   --tier-bg: #e87722;
   --tier-fg: #ffffff;
   --tier-border: #d16619;
 }
 
-.tier-badge[data-tier="Tier 2"] {
+.tier-badge[data-tier='Tier 2'] {
   --tier-bg: #ffb500;
   --tier-fg: #000000;
   --tier-border: #e6a300;
 }
 
-.tier-badge[data-tier="Tier 3"] {
+.tier-badge[data-tier='Tier 3'] {
   --tier-bg: #59315f;
   --tier-fg: #ffffff;
   --tier-border: #4a2850;
 }
 
-.tier-badge[data-tier="Tier 4"] {
+.tier-badge[data-tier='Tier 4'] {
   --tier-bg: #6e3fa3;
   --tier-fg: #ffffff;
   --tier-border: #5e3589;
 }
 
-.tier-badge[data-tier="Partner"] {
+.tier-badge[data-tier='Partner'] {
   --tier-bg: #00b398;
   --tier-fg: #ffffff;
   --tier-border: #009d82;

@@ -579,7 +579,7 @@ export const ChoroplethMap: React.FC<ChoroplethMapComponentProps> = ({
     graticuleLineColor,
     borderWidth,
     borderColor,
-    legends: territoryLegends as any,
+    legends: territoryLegends as unknown,
   }
 
   return (

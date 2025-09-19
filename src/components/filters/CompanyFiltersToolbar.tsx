@@ -60,8 +60,8 @@ export function CompanyFiltersToolbar({
   onMinRevenueChange,
   onClearAllFilters,
   activeFiltersCount,
-  className = "",
-  compact = false
+  className = '',
+  compact = false,
 }: CompanyFiltersToolbarProps) {
   const [showFilters, setShowFilters] = useState(false)
 
@@ -73,54 +73,54 @@ export function CompanyFiltersToolbar({
     // Search filter
     if (searchValue) {
       filters.push({
-        label: "Search",
+        label: 'Search',
         value: searchValue,
-        onClear: () => onSearchChange("")
+        onClear: () => onSearchChange(''),
       })
     }
 
     // Tier filter
     if (selectedTiers.length > 0) {
       filters.push({
-        label: "Tier",
-        value: selectedTiers.join(", "),
-        onClear: () => onTiersChange([])
+        label: 'Tier',
+        value: selectedTiers.join(', '),
+        onClear: () => onTiersChange([]),
       })
     }
 
     // Region filter
     if (selectedRegions.length > 0) {
       filters.push({
-        label: "Region",
-        value: selectedRegions.join(", "),
-        onClear: () => onRegionsChange([])
+        label: 'Region',
+        value: selectedRegions.join(', '),
+        onClear: () => onRegionsChange([]),
       })
     }
 
     // Market filter
     if (selectedMarkets.length > 0) {
       filters.push({
-        label: "Market",
-        value: selectedMarkets.join(", "),
-        onClear: () => onMarketsChange([])
+        label: 'Market',
+        value: selectedMarkets.join(', '),
+        onClear: () => onMarketsChange([]),
       })
     }
 
     // Business model filter
     if (selectedBusinessModels.length > 0) {
       filters.push({
-        label: "Business Model",
-        value: selectedBusinessModels.join(", "),
-        onClear: () => onBusinessModelsChange([])
+        label: 'Business Model',
+        value: selectedBusinessModels.join(', '),
+        onClear: () => onBusinessModelsChange([]),
       })
     }
 
     // Revenue filter
     if (minRevenue !== null) {
       filters.push({
-        label: "Min Revenue",
+        label: 'Min Revenue',
         value: `$${minRevenue}B+`,
-        onClear: () => onMinRevenueChange(null)
+        onClear: () => onMinRevenueChange(null),
       })
     }
 

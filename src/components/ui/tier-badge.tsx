@@ -1,10 +1,10 @@
-import { cn } from '@/lib/utils';
-import './tier-badge.css';
+import { cn } from '@/lib/utils'
+import './tier-badge.css'
 
 interface TierBadgeProps {
-  tier: string | null | undefined;
-  className?: string;
-  size?: 'sm' | 'md' | 'lg';
+  tier: string | null | undefined
+  className?: string
+  size?: 'sm' | 'md' | 'lg'
 }
 
 export function TierBadge({ tier, className, size = 'md' }: TierBadgeProps) {
@@ -12,7 +12,7 @@ export function TierBadge({ tier, className, size = 'md' }: TierBadgeProps) {
     sm: 'px-2 py-1 text-xs',
     md: 'px-2.5 py-1.5 text-sm',
     lg: 'px-3 py-2 text-base',
-  };
+  }
 
   return (
     <span
@@ -26,5 +26,5 @@ export function TierBadge({ tier, className, size = 'md' }: TierBadgeProps) {
     >
       {tier || 'N/A'}
     </span>
-  );
+  )
 }

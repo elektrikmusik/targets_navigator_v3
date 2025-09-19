@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react'
 import {
   type ColumnDef,
   type SortingState,
@@ -8,19 +8,16 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
-import { useCompanyOverview } from "../../hooks/useCompanyOverview";
-import { useCompanyFilters } from "../../hooks/useCompanyFilters";
-import type { CompanyOverview } from "../../db/schema";
-import {
-  MoreHorizontal,
-  Settings2,
-} from "lucide-react";
+} from '@tanstack/react-table'
+import { useCompanyOverview } from '../../hooks/useCompanyOverview'
+import { useCompanyFilters } from '../../hooks/useCompanyFilters'
+import type { CompanyOverview } from '../../db/schema'
+import { MoreHorizontal, Settings2 } from 'lucide-react'
 
 // UI Components
-import { Button } from "@/components/ui/button";
-import { TierBadge } from "@/components/ui/tier-badge";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from '@/components/ui/button'
+import { TierBadge } from '@/components/ui/tier-badge'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,22 +26,34 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuSeparator,
   DropdownMenuLabel,
-} from "@/components/ui/dropdown-menu";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { BubbleChart } from "../charts/BubbleChart";
-import { CompaniesDataStats } from "./CompaniesDataStats";
-import { CompanyFiltersToolbar } from "../filters/CompanyFiltersToolbar";
+} from '@/components/ui/dropdown-menu'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
+import { BubbleChart } from '../charts/BubbleChart'
+import { RadarChart } from '../charts/RadarChart'
+import { CompaniesDataStats } from './CompaniesDataStats'
+import { CompanyFiltersToolbar } from '../filters/CompanyFiltersToolbar'
 
 // Types
-type TableData = CompanyOverview;
-
+type TableData = CompanyOverview
 
 // Column Header Component
-function DataTableColumnHeader({ column, title }: { column: Column<TableData, unknown>; title: string }) {
+function DataTableColumnHeader({
+  column,
+  title,
+}: {
+  column: Column<TableData, unknown>
+  title: string
+}) {
   if (!column.getCanSort()) {
-    return <div className="text-left">{title}</div>;
+    return <div className="text-left">{title}</div>
   }
 
   return (
@@ -73,104 +82,142 @@ function DataTableColumnHeader({ column, title }: { column: Column<TableData, un
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  );
+  )
 }
 
 // Main integrated component
 export function CompaniesDataWithChart() {
-  const { data, loading, error } = useCompanyOverview();
+  const { data, loading, error } = useCompanyOverview()
   const {
     state: filterState,
     actions: filterActions,
     filterOptions,
     filteredData,
-  } = useCompanyFilters(data);
+  } = useCompanyFilters(data)
 
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [rowSelection, setRowSelection] = useState({});
-  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
-  const [renderLogos, setRenderLogos] = useState(false);
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [rowSelection, setRowSelection] = useState({})
+  const [selectedCompanyIds, setSelectedCompanyIds] = useState<Set<string>>(
+    new Set()
+  )
+  const [renderLogos, setRenderLogos] = useState(false)
 
   // Load column visibility from localStorage on mount
   const [columnVisibility, setColumnVisibility] = useState(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('companies-table-column-visibility');
-      return saved ? JSON.parse(saved) : {};
+      const saved = localStorage.getItem('companies-table-column-visibility')
+      return saved ? JSON.parse(saved) : {}
     }
-    return {};
-  });
+    return {}
+  })
 
   // Save column visibility changes to localStorage
-  const handleColumnVisibilityChange = (updaterOrValue: Record<string, boolean> | ((old: Record<string, boolean>) => Record<string, boolean>)) => {
-    const newVisibility = typeof updaterOrValue === 'function'
-      ? updaterOrValue(columnVisibility)
-      : updaterOrValue;
+  const handleColumnVisibilityChange = (
+    updaterOrValue:
+      | Record<string, boolean>
+      | ((old: Record<string, boolean>) => Record<string, boolean>)
+  ) => {
+    const newVisibility =
+      typeof updaterOrValue === 'function'
+        ? updaterOrValue(columnVisibility)
+        : updaterOrValue
 
-    setColumnVisibility(newVisibility);
+    setColumnVisibility(newVisibility)
 
     if (typeof window !== 'undefined') {
-      localStorage.setItem('companies-table-column-visibility', JSON.stringify(newVisibility));
+      localStorage.setItem(
+        'companies-table-column-visibility',
+        JSON.stringify(newVisibility)
+      )
     }
-  };
+  }
 
   // Reset column visibility to show all columns
   const resetColumnVisibility = () => {
-    const allVisible: Record<string, boolean> = {};
+    const allVisible: Record<string, boolean> = {}
     table.getAllColumns().forEach(column => {
-      allVisible[column.id] = true;
-    });
-    handleColumnVisibilityChange(allVisible);
-  };
+      allVisible[column.id] = true
+    })
+    handleColumnVisibilityChange(allVisible)
+  }
 
   const columns: ColumnDef<TableData>[] = [
     {
-      id: "select",
+      id: 'select',
       header: ({ table }) => (
         <Checkbox
           checked={table.getIsAllPageRowsSelected()}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"
         />
       ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => {
-            // Use the same naming logic as the chart
-            const englishName = row.getValue("englishName") as string;
-            const companyName = row.getValue("companyName") as string;
-            const chartId = englishName || companyName || 'Unknown';
+      cell: ({ row }) => {
+        const key = row.original.key
+        const englishName = row.getValue('englishName') as string
+        const companyName = row.getValue('companyName') as string
+        const chartId =
+          key?.toString() || englishName || companyName || 'Unknown'
+        const isSelected = selectedCompanyIds.has(chartId)
 
-            // Clear all selections first
-            table.resetRowSelection();
+        return (
+          <Checkbox
+            checked={isSelected}
+            onCheckedChange={value => {
+              const newSelectedIds = new Set(selectedCompanyIds)
 
-            if (value) {
-              row.toggleSelected(true);
-              setSelectedCompanyId(chartId);
-            } else {
-              setSelectedCompanyId(null);
-            }
-          }}
-          aria-label="Select row"
-        />
-      ),
+              if (value) {
+                newSelectedIds.add(chartId)
+              } else {
+                newSelectedIds.delete(chartId)
+              }
+
+              setSelectedCompanyIds(newSelectedIds)
+
+              // Update row selection to match
+              if (value) {
+                row.toggleSelected(true)
+              } else {
+                row.toggleSelected(false)
+              }
+            }}
+            aria-label="Select row"
+          />
+        )
+      },
       enableSorting: false,
       enableHiding: false,
     },
     {
-      accessorKey: "logoUrl",
+      accessorKey: 'key',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="ID" />
+      ),
+      cell: ({ row }) => {
+        const key = row.getValue('key') as number
+        return (
+          <div className="text-right font-mono text-sm text-muted-foreground">
+            {key || 'N/A'}
+          </div>
+        )
+      },
+      size: 80,
+      minSize: 60,
+      maxSize: 100,
+    },
+    {
+      accessorKey: 'logoUrl',
       header: () => <div className="text-center">Logo</div>,
       cell: ({ row }) => {
-        const logoUrl = row.getValue("logoUrl") as string;
+        const logoUrl = row.getValue('logoUrl') as string
         return (
           <div className="flex justify-center">
             {logoUrl ? (
               <img
                 src={logoUrl}
-                alt={`${row.getValue("englishName") || "Company"} logo`}
+                alt={`${row.getValue('englishName') || 'Company'} logo`}
                 className="h-8 w-8 rounded object-contain"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
+                onError={e => {
+                  e.currentTarget.style.display = 'none'
                 }}
               />
             ) : (
@@ -179,37 +226,43 @@ export function CompaniesDataWithChart() {
               </div>
             )}
           </div>
-        );
+        )
       },
       enableSorting: false,
       enableHiding: true,
     },
     {
-      accessorKey: "englishName",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Company Name" />,
+      accessorKey: 'englishName',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Company Name" />
+      ),
       cell: ({ row }) => {
-        const englishName = row.getValue("englishName") as string;
-        const companyName = row.getValue("companyName") as string;
-        const chartId = englishName || companyName || 'Unknown';
-        const isHighlighted = selectedCompanyId === chartId;
+        const key = row.original.key
+        const englishName = row.getValue('englishName') as string
+        const companyName = row.getValue('companyName') as string
+        const chartId =
+          key?.toString() || englishName || companyName || 'Unknown'
+        const isHighlighted = selectedCompanyIds.has(chartId)
 
         return (
           <div
             className={`cursor-pointer ${isHighlighted ? 'bg-blue-100 px-2 py-1 rounded' : ''}`}
             onClick={() => {
-              const newSelectedId = chartId === selectedCompanyId ? null : chartId;
-              console.log('Company name clicked. Chart ID:', chartId, 'New selected ID:', newSelectedId);
-              setSelectedCompanyId(newSelectedId);
+              const newSelectedIds = new Set(selectedCompanyIds)
 
-              // Clear all selections and select this row if needed
-              table.resetRowSelection();
-              if (newSelectedId) {
-                row.toggleSelected(true);
+              if (newSelectedIds.has(chartId)) {
+                newSelectedIds.delete(chartId)
+                row.toggleSelected(false)
+              } else {
+                newSelectedIds.add(chartId)
+                row.toggleSelected(true)
               }
+
+              setSelectedCompanyIds(newSelectedIds)
             }}
           >
             <div className="font-semibold text-foreground">
-              {englishName || "N/A"}
+              {englishName || 'N/A'}
             </div>
             {companyName && (
               <div className="text-xs text-muted-foreground mt-1">
@@ -217,114 +270,134 @@ export function CompaniesDataWithChart() {
               </div>
             )}
           </div>
-        );
+        )
       },
       size: 300,
       minSize: 180,
       maxSize: 450,
     },
     {
-      accessorKey: "companyName",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Display Name" />,
-      cell: ({ row }) => <div className="text-muted-foreground">{row.getValue("companyName") || "N/A"}</div>,
+      accessorKey: 'companyName',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Display Name" />
+      ),
+      cell: ({ row }) => (
+        <div className="text-muted-foreground">
+          {row.getValue('companyName') || 'N/A'}
+        </div>
+      ),
     },
     {
-      accessorKey: "country",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Country" />,
-      cell: ({ row }) => <div>{row.getValue("country") || "N/A"}</div>,
+      accessorKey: 'country',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Country" />
+      ),
+      cell: ({ row }) => <div>{row.getValue('country') || 'N/A'}</div>,
       filterFn: (row, id, value) => {
-        return value.includes(row.getValue(id));
+        return value.includes(row.getValue(id))
       },
     },
     {
-      accessorKey: "ceres_region",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Region" />,
-      cell: ({ row }) => <div>{row.getValue("ceres_region") || "N/A"}</div>,
+      accessorKey: 'ceres_region',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Region" />
+      ),
+      cell: ({ row }) => <div>{row.getValue('ceres_region') || 'N/A'}</div>,
       filterFn: (row, id, value) => {
-        return value.includes(row.getValue(id));
+        return value.includes(row.getValue(id))
       },
     },
     {
-      accessorKey: "primaryMarket",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Primary Market" />,
-      cell: ({ row }) => <div>{row.getValue("primaryMarket") || "N/A"}</div>,
+      accessorKey: 'primaryMarket',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Primary Market" />
+      ),
+      cell: ({ row }) => <div>{row.getValue('primaryMarket') || 'N/A'}</div>,
       filterFn: (row, id, value) => {
-        return value.includes(row.getValue(id));
+        return value.includes(row.getValue(id))
       },
     },
     {
-      accessorKey: "businessModel",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Business Model" />,
-      cell: ({ row }) => <div>{row.getValue("businessModel") || "N/A"}</div>,
+      accessorKey: 'businessModel',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Business Model" />
+      ),
+      cell: ({ row }) => <div>{row.getValue('businessModel') || 'N/A'}</div>,
       filterFn: (row, id, value) => {
-        return value.includes(row.getValue(id));
+        return value.includes(row.getValue(id))
       },
     },
     {
-      accessorKey: "Tier",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Tier" />,
+      accessorKey: 'Tier',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Tier" />
+      ),
       cell: ({ row }) => {
-        const tier = row.getValue("Tier") as string;
-        return <TierBadge tier={tier} size="sm" />;
+        const tier = row.getValue('Tier') as string
+        return <TierBadge tier={tier} size="sm" />
       },
       filterFn: (row, id, value) => {
-        return value.includes(row.getValue(id));
+        return value.includes(row.getValue(id))
       },
       size: 120,
       minSize: 100,
       maxSize: 150,
     },
     {
-      accessorKey: "overallScore",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Overall Score" />,
+      accessorKey: 'overallScore',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Overall Score" />
+      ),
       cell: ({ row }) => {
-        const score = row.getValue("overallScore") as number;
+        const score = row.getValue('overallScore') as number
         return (
           <div className="text-right font-medium">
-            {score ? score.toFixed(1) : "N/A"}
+            {score ? score.toFixed(1) : 'N/A'}
           </div>
-        );
+        )
       },
     },
     {
-      accessorKey: "strategicFit",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Strategic Fit" />,
+      accessorKey: 'strategicFit',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Strategic Fit" />
+      ),
       cell: ({ row }) => {
-        const score = row.getValue("strategicFit") as number;
+        const score = row.getValue('strategicFit') as number
         return (
-          <div className="text-right">
-            {score ? score.toFixed(1) : "N/A"}
-          </div>
-        );
+          <div className="text-right">{score ? score.toFixed(1) : 'N/A'}</div>
+        )
       },
     },
     {
-      accessorKey: "abilityToExecute",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Ability to Execute" />,
+      accessorKey: 'abilityToExecute',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Ability to Execute" />
+      ),
       cell: ({ row }) => {
-        const score = row.getValue("abilityToExecute") as number;
+        const score = row.getValue('abilityToExecute') as number
         return (
-          <div className="text-right">
-            {score ? score.toFixed(1) : "N/A"}
-          </div>
-        );
+          <div className="text-right">{score ? score.toFixed(1) : 'N/A'}</div>
+        )
       },
     },
     {
-      accessorKey: "annual_revenue",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Annual Revenue" />,
+      accessorKey: 'annual_revenue',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Annual Revenue" />
+      ),
       cell: ({ row }) => {
-        const revenue = row.getValue("annual_revenue") as number;
-        if (!revenue) return <div className="text-right">N/A</div>;
-        const formatted = `$${revenue.toFixed(0)}B`;
-        return <div className="text-right font-medium">{formatted}</div>;
+        const revenue = row.getValue('annual_revenue') as number
+        if (!revenue) return <div className="text-right">N/A</div>
+        const formatted = `$${revenue.toFixed(0)}B`
+        return <div className="text-right font-medium">{formatted}</div>
       },
     },
     {
-      id: "actions",
+      id: 'actions',
       enableHiding: false,
       cell: ({ row }) => {
-        const item = row.original;
+        const item = row.original
 
         return (
           <DropdownMenu>
@@ -336,7 +409,11 @@ export function CompaniesDataWithChart() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(item.key?.toString() || "")}>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigator.clipboard.writeText(item.key?.toString() || '')
+                }
+              >
                 Copy ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -344,10 +421,10 @@ export function CompaniesDataWithChart() {
               <DropdownMenuItem>Edit</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        );
+        )
       },
     },
-  ];
+  ]
 
   const table = useReactTable({
     data: filteredData,
@@ -359,45 +436,71 @@ export function CompaniesDataWithChart() {
     onColumnVisibilityChange: handleColumnVisibilityChange,
     onRowSelectionChange: setRowSelection,
     enableColumnResizing: true,
-    columnResizeMode: "onChange",
+    columnResizeMode: 'onChange',
     state: {
       sorting,
       columnVisibility,
       rowSelection,
     },
-  });
+  })
 
   // Get selected values from filter state
-  const selectedTiers = filterState.columnFilters.find(f => f.id === 'Tier')?.value || [];
-  const selectedRegions = filterState.columnFilters.find(f => f.id === 'ceres_region')?.value || [];
-  const selectedMarkets = filterState.columnFilters.find(f => f.id === 'primaryMarket')?.value || [];
-  const selectedBusinessModels = filterState.columnFilters.find(f => f.id === 'businessModel')?.value || [];
+  const selectedTiers =
+    filterState.columnFilters.find(f => f.id === 'Tier')?.value || []
+  const selectedRegions =
+    filterState.columnFilters.find(f => f.id === 'ceres_region')?.value || []
+  const selectedMarkets =
+    filterState.columnFilters.find(f => f.id === 'primaryMarket')?.value || []
+  const selectedBusinessModels =
+    filterState.columnFilters.find(f => f.id === 'businessModel')?.value || []
 
-  
   // Handle chart node click
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChartNodeClick = (node: any) => {
-    // The node ID should match what we set in the chart (englishName || companyName || 'Unknown')
-    const chartId = node.data.id;
-    const newSelectedId = chartId === selectedCompanyId ? null : chartId;
-    setSelectedCompanyId(newSelectedId);
+    // The node ID from radar chart is now the display name (englishName || companyName)
+    const displayName = node.data.id
+    const newSelectedIds = new Set(selectedCompanyIds)
 
-    // Clear all previous selections and select the corresponding row
-    table.resetRowSelection();
+    // Find the corresponding company by display name to get the key-based ID
+    const company = data?.find(comp => {
+      const compDisplayName =
+        comp.englishName ||
+        comp.companyName ||
+        comp.key?.toString() ||
+        'Unknown'
+      return compDisplayName === displayName
+    })
 
-    if (newSelectedId) {
-      const tableRow = table.getRowModel().rows.find(row => {
-        const englishName = row.getValue("englishName") as string;
-        const companyName = row.getValue("companyName") as string;
-        const rowChartId = englishName || companyName || 'Unknown';
-        return rowChartId === newSelectedId;
-      });
+    if (!company) return
 
-      if (tableRow) {
-        tableRow.toggleSelected(true);
-      }
+    // Use the key-based ID for selection (consistent with table selection)
+    const key = company.key
+    const englishName = company.englishName
+    const companyName = company.companyName
+    const chartId = key?.toString() || englishName || companyName || 'Unknown'
+
+    if (newSelectedIds.has(chartId)) {
+      newSelectedIds.delete(chartId)
+    } else {
+      newSelectedIds.add(chartId)
     }
-  };
+
+    setSelectedCompanyIds(newSelectedIds)
+
+    // Update row selection to match
+    const tableRow = table.getRowModel().rows.find(row => {
+      const rowKey = row.original.key
+      const rowEnglishName = row.getValue('englishName') as string
+      const rowCompanyName = row.getValue('companyName') as string
+      const rowChartId =
+        rowKey?.toString() || rowEnglishName || rowCompanyName || 'Unknown'
+      return rowChartId === chartId
+    })
+
+    if (tableRow) {
+      tableRow.toggleSelected(newSelectedIds.has(chartId))
+    }
+  }
 
   if (loading) {
     return (
@@ -406,7 +509,7 @@ export function CompaniesDataWithChart() {
           <div className="text-muted-foreground">Loading companies...</div>
         </div>
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -416,7 +519,7 @@ export function CompaniesDataWithChart() {
           <div className="text-destructive">Error: {error}</div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -425,7 +528,7 @@ export function CompaniesDataWithChart() {
       <CompaniesDataStats
         data={data}
         filteredData={filteredData}
-        selectedCompanyId={selectedCompanyId}
+        selectedCompanyIds={selectedCompanyIds}
         activeFilters={filterActions.activeFiltersCount}
         hasGlobalFilter={!!filterState.globalFilter}
       />
@@ -438,16 +541,24 @@ export function CompaniesDataWithChart() {
           onSearchChange={filterActions.setGlobalFilter}
           tierOptions={filterOptions.tiers}
           selectedTiers={selectedTiers}
-          onTiersChange={(values) => filterActions.setColumnFilter('Tier', values)}
+          onTiersChange={values =>
+            filterActions.setColumnFilter('Tier', values)
+          }
           regionOptions={filterOptions.regions}
           selectedRegions={selectedRegions}
-          onRegionsChange={(values) => filterActions.setColumnFilter('ceres_region', values)}
+          onRegionsChange={values =>
+            filterActions.setColumnFilter('ceres_region', values)
+          }
           marketOptions={filterOptions.markets}
           selectedMarkets={selectedMarkets}
-          onMarketsChange={(values) => filterActions.setColumnFilter('primaryMarket', values)}
+          onMarketsChange={values =>
+            filterActions.setColumnFilter('primaryMarket', values)
+          }
           businessModelOptions={filterOptions.businessModels}
           selectedBusinessModels={selectedBusinessModels}
-          onBusinessModelsChange={(values) => filterActions.setColumnFilter('businessModel', values)}
+          onBusinessModelsChange={values =>
+            filterActions.setColumnFilter('businessModel', values)
+          }
           minRevenue={filterState.minRevenue}
           onMinRevenueChange={filterActions.setMinRevenue}
           onClearAllFilters={filterActions.clearAllFilters}
@@ -455,10 +566,10 @@ export function CompaniesDataWithChart() {
         />
       </div>
 
-      {/* Main Layout: Table + Chart */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      {/* Main Layout: Table + Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
         {/* Table Card */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-3">
           <div className="rounded-lg border bg-card p-6 h-full flex flex-col">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Companies Data</h3>
@@ -472,19 +583,28 @@ export function CompaniesDataWithChart() {
                 <DropdownMenuContent align="end" className="w-[150px]">
                   <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={resetColumnVisibility} className="text-sm">
+                  <DropdownMenuItem
+                    onClick={resetColumnVisibility}
+                    className="text-sm"
+                  >
                     Show all columns
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   {table
                     .getAllColumns()
-                    .filter((column) => typeof column.accessorFn !== "undefined" && column.getCanHide())
-                    .map((column) => (
+                    .filter(
+                      column =>
+                        typeof column.accessorFn !== 'undefined' &&
+                        column.getCanHide()
+                    )
+                    .map(column => (
                       <DropdownMenuCheckboxItem
                         key={column.id}
                         className="capitalize"
                         checked={column.getIsVisible()}
-                        onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                        onCheckedChange={value =>
+                          column.toggleVisibility(!!value)
+                        }
                       >
                         {column.id}
                       </DropdownMenuCheckboxItem>
@@ -494,13 +614,13 @@ export function CompaniesDataWithChart() {
             </div>
 
             {/* Table */}
-            <div className="rounded-md border flex-1 flex flex-col">
+            <div className="rounded-md border flex-3 flex flex-col">
               <div className="flex-1 overflow-auto">
                 <table className="w-full caption-bottom text-sm">
                   <thead className="sticky top-0 z-20 bg-background shadow-sm [&_tr]:border-b">
-                    {table.getHeaderGroups().map((headerGroup) => (
+                    {table.getHeaderGroups().map(headerGroup => (
                       <tr key={headerGroup.id} className="border-b">
-                        {headerGroup.headers.map((header) => {
+                        {headerGroup.headers.map(header => {
                           return (
                             <th
                               key={header.id}
@@ -509,9 +629,12 @@ export function CompaniesDataWithChart() {
                             >
                               {header.isPlaceholder
                                 ? null
-                                : flexRender(header.column.columnDef.header, header.getContext())}
+                                : flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext()
+                                  )}
                             </th>
-                          );
+                          )
                         })}
                       </tr>
                     ))}
@@ -521,19 +644,29 @@ export function CompaniesDataWithChart() {
                       table.getRowModel().rows.map((row, index) => (
                         <tr
                           key={row.id}
-                          data-state={row.getIsSelected() && "selected"}
+                          data-state={row.getIsSelected() && 'selected'}
                           className={`border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted ${index % 2 === 0 ? 'bg-background' : 'bg-muted/20'} hover:bg-muted/50 transition-colors`}
                         >
-                          {row.getVisibleCells().map((cell) => (
-                            <td key={cell.id} className="p-4 align-middle [&:has([role=checkbox])]:pr-0 py-3" style={{ width: cell.column.getSize() }}>
-                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          {row.getVisibleCells().map(cell => (
+                            <td
+                              key={cell.id}
+                              className="p-4 align-middle [&:has([role=checkbox])]:pr-0 py-3"
+                              style={{ width: cell.column.getSize() }}
+                            >
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                              )}
                             </td>
                           ))}
                         </tr>
                       ))
                     ) : (
                       <tr>
-                        <td colSpan={columns.length} className="h-24 text-center p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                        <td
+                          colSpan={columns.length}
+                          className="h-24 text-center p-4 align-middle [&:has([role=checkbox])]:pr-0"
+                        >
                           No results.
                         </td>
                       </tr>
@@ -545,11 +678,11 @@ export function CompaniesDataWithChart() {
               {/* Pagination */}
               <div className="flex items-center justify-between space-x-2 p-4 border-t bg-muted/20">
                 <div className="flex-1 text-sm text-muted-foreground">
-                  {table.getFilteredSelectedRowModel().rows.length} of{" "}
+                  {table.getFilteredSelectedRowModel().rows.length} of{' '}
                   {table.getFilteredRowModel().rows.length} row(s) selected.
-                  {selectedCompanyId && (
+                  {selectedCompanyIds.size > 0 && (
                     <span className="ml-4 font-medium text-blue-600">
-                      Highlighted: {selectedCompanyId}
+                      Highlighted: {selectedCompanyIds.size} company(ies)
                     </span>
                   )}
                 </div>
@@ -558,15 +691,17 @@ export function CompaniesDataWithChart() {
                     <p className="text-sm font-medium">Rows per page</p>
                     <Select
                       value={`${table.getState().pagination.pageSize}`}
-                      onValueChange={(value) => {
-                        table.setPageSize(Number(value));
+                      onValueChange={value => {
+                        table.setPageSize(Number(value))
                       }}
                     >
                       <SelectTrigger className="h-8 w-[70px]">
-                        <SelectValue placeholder={table.getState().pagination.pageSize} />
+                        <SelectValue
+                          placeholder={table.getState().pagination.pageSize}
+                        />
                       </SelectTrigger>
                       <SelectContent side="top">
-                        {[10, 20, 30, 40, 50].map((pageSize) => (
+                        {[10, 20, 30, 40, 50].map(pageSize => (
                           <SelectItem key={pageSize} value={`${pageSize}`}>
                             {pageSize}
                           </SelectItem>
@@ -575,7 +710,8 @@ export function CompaniesDataWithChart() {
                     </Select>
                   </div>
                   <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-                    Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+                    Page {table.getState().pagination.pageIndex + 1} of{' '}
+                    {table.getPageCount()}
                   </div>
                   <div className="flex items-center space-x-2">
                     <Button
@@ -603,11 +739,13 @@ export function CompaniesDataWithChart() {
           </div>
         </div>
 
-        {/* Chart Card */}
-        <div className="lg:col-span-2">
+        {/* Bubble Chart Card */}
+        <div className="lg:col-span-3">
           <div className="rounded-lg border bg-card p-6 h-full flex flex-col">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Company Positioning Chart</h3>
+              <h3 className="text-lg font-semibold">
+                Company Positioning Chart
+              </h3>
               <div className="flex items-center space-x-2">
                 <Switch
                   id="render-logos"
@@ -629,7 +767,7 @@ export function CompaniesDataWithChart() {
                   yScaleMax={10}
                   nodeSize={30}
                   onNodeClick={handleChartNodeClick}
-                  highlightedCompany={selectedCompanyId}
+                  highlightedCompanies={Array.from(selectedCompanyIds)}
                   renderLogos={renderLogos}
                 />
               </div>
@@ -637,6 +775,52 @@ export function CompaniesDataWithChart() {
           </div>
         </div>
       </div>
+
+      {/* Additional Cards Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Radar Chart Card */}
+        <div className="rounded-lg border bg-card p-6">
+          <h3 className="text-lg font-semibold mb-4">Score Comparison</h3>
+          <div className="h-64 w-full">
+            <RadarChart
+              data={data}
+              selectedCompanyIds={selectedCompanyIds}
+              height={250}
+            />
+          </div>
+        </div>
+
+        {/* Insights Card */}
+        <div className="rounded-lg border bg-card p-6">
+          <h3 className="text-lg font-semibold mb-4">Quick Insights</h3>
+          <div className="space-y-3 text-sm">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <span>
+                {selectedCompanyIds.size > 0
+                  ? `${selectedCompanyIds.size} companies selected for analysis`
+                  : 'Select companies to enable detailed analysis'}
+              </span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span>
+                {filteredData?.length === data?.length
+                  ? 'No filters applied - showing all data'
+                  : `Filters applied: ${data?.length - filteredData?.length} companies hidden`}
+              </span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+              <span>
+                {table.getRowModel().rows.length > 0
+                  ? `${table.getRowModel().rows.length} rows displayed`
+                  : 'No matching data found'}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  );
+  )
 }

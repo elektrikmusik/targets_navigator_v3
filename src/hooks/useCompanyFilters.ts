@@ -59,7 +59,7 @@ export function useCompanyFilters(data: CompanyOverview[]) {
   const clearColumnFilter = (columnId: string) => {
     setState(prev => ({
       ...prev,
-      columnFilters: prev.columnFilters.filter(f => f.id !== columnId)
+      columnFilters: prev.columnFilters.filter(f => f.id !== columnId),
     }))
   }
 
@@ -73,16 +73,27 @@ export function useCompanyFilters(data: CompanyOverview[]) {
 
   // Generate filter options from data
   const filterOptions = useMemo(() => {
-    const tiers = Array.from(new Set(data.map(item => item.Tier).filter(Boolean)))
-    const regions = Array.from(new Set(data.map(item => item.ceres_region).filter(Boolean)))
-    const markets = Array.from(new Set(data.map(item => item.primaryMarket).filter(Boolean)))
-    const businessModels = Array.from(new Set(data.map(item => item.businessModel).filter(Boolean)))
+    const tiers = Array.from(
+      new Set(data.map(item => item.Tier).filter(Boolean))
+    )
+    const regions = Array.from(
+      new Set(data.map(item => item.ceres_region).filter(Boolean))
+    )
+    const markets = Array.from(
+      new Set(data.map(item => item.primaryMarket).filter(Boolean))
+    )
+    const businessModels = Array.from(
+      new Set(data.map(item => item.businessModel).filter(Boolean))
+    )
 
     return {
       tiers: tiers.map(tier => ({ label: tier!, value: tier! })),
       regions: regions.map(region => ({ label: region!, value: region! })),
       markets: markets.map(market => ({ label: market!, value: market! })),
-      businessModels: businessModels.map(model => ({ label: model!, value: model! })),
+      businessModels: businessModels.map(model => ({
+        label: model!,
+        value: model!,
+      })),
     }
   }, [data])
 
@@ -110,7 +121,10 @@ export function useCompanyFilters(data: CompanyOverview[]) {
           item.primaryMarket,
           item.businessModel,
           item.Tier,
-        ].filter(Boolean).join(' ').toLowerCase()
+        ]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase()
 
         if (!searchableText.includes(searchLower)) {
           return false

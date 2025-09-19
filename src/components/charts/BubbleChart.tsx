@@ -59,29 +59,43 @@ export interface BubbleChartProps {
   xScaleMax?: number
   yScaleMin?: number
   yScaleMax?: number
-  blendMode?: 'normal' | 'multiply' | 'screen' | 'overlay' | 'darken' | 'lighten' | 'color-dodge' | 'color-burn' | 'hard-light' | 'soft-light' | 'difference' | 'exclusion'
+  blendMode?:
+    | 'normal'
+    | 'multiply'
+    | 'screen'
+    | 'overlay'
+    | 'darken'
+    | 'lighten'
+    | 'color-dodge'
+    | 'color-burn'
+    | 'hard-light'
+    | 'soft-light'
+    | 'difference'
+    | 'exclusion'
   // Tooltip customization
   tooltipSize?: 'small' | 'medium' | 'large' | 'extra-large'
   // Highlighting support
+  highlightedCompanies?: string[] | null
+  // Backward compatibility
   highlightedCompany?: string | null
   // Logo rendering
   renderLogos?: boolean
 }
 
-
 // Transform company data for Nivo ScatterPlot, grouped by tier
 const transformData = (companies: CompanyOverview[]) => {
   console.log('transformData - Input companies:', companies)
-  
+
   if (!Array.isArray(companies)) {
     console.error('transformData - Input is not an array:', companies)
     return []
   }
-  
-  const filtered = companies.filter(company =>
-    company.strategicFit != null &&
-    company.abilityToExecute != null &&
-    company.overallScore != null
+
+  const filtered = companies.filter(
+    company =>
+      company.strategicFit != null &&
+      company.abilityToExecute != null &&
+      company.overallScore != null
   )
 
   console.log('BubbleChart data transformation:', {
@@ -91,56 +105,66 @@ const transformData = (companies: CompanyOverview[]) => {
       name: c.englishName || c.companyName,
       strategicFit: c.strategicFit,
       abilityToExecute: c.abilityToExecute,
-      overallScore: c.overallScore
-    }))
+      overallScore: c.overallScore,
+    })),
   })
-  
+
   console.log('transformData - Filtered companies:', filtered.length)
-  
+
   // Group by tier
-  const groupedByTier = filtered.reduce((acc, company) => {
-    const tier = company.Tier || 'Unknown'
-    if (!acc[tier]) {
-      acc[tier] = []
-    }
-    
-    acc[tier].push({
-      x: company.strategicFit!,
-      y: company.abilityToExecute!,
-      size: company.overallScore!,
-      id: company.englishName || company.companyName || 'Unknown',
-      company: company,
-      logourl: company.logoUrl,
-      tier: company.Tier,
-      country: company.country,
-      region: company.ceres_region,
-      primarymarket: company.primaryMarket,
-      businessmodel: company.businessModel,
-      annualrevenue: company.annual_revenue,
-      financescore: company.finance_score,
-      h2score: company.H2Score,
-      color: getTierColor(tier)
-    })
-    
-    return acc
-  }, {} as Record<string, BubbleChartData[]>)
-  
+  const groupedByTier = filtered.reduce(
+    (acc, company) => {
+      const tier = company.Tier || 'Unknown'
+      if (!acc[tier]) {
+        acc[tier] = []
+      }
+
+      acc[tier].push({
+        x: company.strategicFit!,
+        y: company.abilityToExecute!,
+        size: company.overallScore!,
+        id: company.englishName || company.companyName || 'Unknown',
+        company: company,
+        logourl: company.logoUrl,
+        tier: company.Tier,
+        country: company.country,
+        region: company.ceres_region,
+        primarymarket: company.primaryMarket,
+        businessmodel: company.businessModel,
+        annualrevenue: company.annual_revenue,
+        financescore: company.finance_score,
+        h2score: company.H2Score,
+        color: getTierColor(tier),
+      })
+
+      return acc
+    },
+    {} as Record<string, BubbleChartData[]>
+  )
+
   console.log('transformData - Grouped by tier:', Object.keys(groupedByTier))
-  
+
   // Convert to Nivo series format
   const series = Object.entries(groupedByTier).map(([tier, data]) => ({
     id: tier,
     data: data,
-    color: getTierColor(tier)
+    color: getTierColor(tier),
   }))
-  
+
   console.log('BubbleChart - Using centralized tier colors')
-  console.log('BubbleChart - Series with colors:', series.map(s => ({ tier: s.id, color: s.color, count: s.data.length })))
-  console.log('BubbleChart - Sample data points with colors:', series[0]?.data?.slice(0, 2)?.map(d => ({ id: d.id, tier: d.tier, color: d.color })))
-  
+  console.log(
+    'BubbleChart - Series with colors:',
+    series.map(s => ({ tier: s.id, color: s.color, count: s.data.length }))
+  )
+  console.log(
+    'BubbleChart - Sample data points with colors:',
+    series[0]?.data
+      ?.slice(0, 2)
+      ?.map(d => ({ id: d.id, tier: d.tier, color: d.color }))
+  )
+
   return series
 }
-
 
 export const BubbleChart: React.FC<BubbleChartProps> = ({
   data,
@@ -148,7 +172,7 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
   width = 600,
   margin = { top: 50, right: 50, bottom: 50, left: 50 },
   nodeSize = 5,
-  
+
   useMesh = false,
   xScaleMin = 0,
   xScaleMax = 20,
@@ -156,6 +180,8 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
   yScaleMax = 20,
   blendMode = 'normal',
   tooltipSize = 'medium',
+  highlightedCompanies = null,
+  // Backward compatibility - keep highlightedCompany for existing usage
   highlightedCompany = null,
   renderLogos = false,
   theme = {
@@ -164,41 +190,41 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
       fontSize: 11,
       fill: '#333333',
       outlineWidth: 0,
-      outlineColor: 'transparent'
+      outlineColor: 'transparent',
     },
     axis: {
       domain: {
         line: {
           stroke: '#000000',
-          strokeWidth: 2
-        }
+          strokeWidth: 2,
+        },
       },
       legend: {
         text: {
           fontSize: 12,
           fill: '#333333',
           outlineWidth: 0,
-          outlineColor: 'transparent'
-        }
+          outlineColor: 'transparent',
+        },
       },
       ticks: {
         line: {
           stroke: '#000000',
-          strokeWidth: 2
+          strokeWidth: 2,
         },
         text: {
           fontSize: 11,
           fill: '#333333',
           outlineWidth: 0,
-          outlineColor: 'transparent'
-        }
-      }
+          outlineColor: 'transparent',
+        },
+      },
     },
     grid: {
       line: {
         stroke: '#000000',
-        strokeWidth: 2
-      }
+        strokeWidth: 2,
+      },
     },
     legends: {
       title: {
@@ -206,14 +232,14 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
           fontSize: 11,
           fill: '#333333',
           outlineWidth: 0,
-          outlineColor: 'transparent'
-        }
+          outlineColor: 'transparent',
+        },
       },
       text: {
         fontSize: 11,
         fill: '#333333',
         outlineWidth: 0,
-        outlineColor: 'transparent'
+        outlineColor: 'transparent',
       },
       ticks: {
         line: {},
@@ -221,9 +247,9 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
           fontSize: 10,
           fill: '#333333',
           outlineWidth: 0,
-          outlineColor: 'transparent'
-        }
-      }
+          outlineColor: 'transparent',
+        },
+      },
     },
     annotations: {
       text: {
@@ -231,28 +257,28 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
         fill: '#333333',
         outlineWidth: 2,
         outlineColor: '#ffffff',
-        outlineOpacity: 1
+        outlineOpacity: 1,
       },
       link: {
         stroke: '#000000',
         strokeWidth: 1,
         outlineWidth: 2,
         outlineColor: '#ffffff',
-        outlineOpacity: 1
+        outlineOpacity: 1,
       },
       outline: {
         stroke: '#000000',
         strokeWidth: 2,
         outlineWidth: 2,
         outlineColor: '#ffffff',
-        outlineOpacity: 1
+        outlineOpacity: 1,
       },
       symbol: {
         fill: '#000000',
         outlineWidth: 2,
         outlineColor: '#ffffff',
-        outlineOpacity: 1
-      }
+        outlineOpacity: 1,
+      },
     },
     tooltip: {
       container: {
@@ -260,14 +286,14 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
         color: '#333333',
         fontSize: 12,
         borderRadius: '9px',
-        boxShadow: '0 3px 9px 0 rgba(0, 0, 0, 0.5)'
+        boxShadow: '0 3px 9px 0 rgba(0, 0, 0, 0.5)',
       },
       basic: {},
       chip: {},
       table: {},
       tableCell: {},
-      tableCellValue: {}
-    }
+      tableCellValue: {},
+    },
   },
   onNodeClick,
   enableGridX = true,
@@ -280,7 +306,7 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
     legend: 'Strategic Fit',
     legendPosition: 'middle',
     legendOffset: 20,
-    tickValues: []
+    tickValues: [],
   },
   axisLeft = {
     orient: 'left',
@@ -290,7 +316,7 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
     legend: 'Ability to Execute',
     legendPosition: 'middle',
     legendOffset: -20,
-    tickValues: []
+    tickValues: [],
   },
   legends = [
     {
@@ -309,56 +335,69 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
         {
           on: 'hover',
           style: {
-            itemOpacity: 1
-          }
-        }
-      ]
-    }
-  ]
+            itemOpacity: 1,
+          },
+        },
+      ],
+    },
+  ],
 }) => {
-  // State for selected node to create focus effect
+  // State for selected node to create focus effect (backward compatibility)
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
 
-  // Update selectedNodeId when highlightedCompany changes
+  // Update selectedNodeId when highlightedCompanies changes
+  // For backward compatibility, we'll only show the first selected company in the UI
   React.useEffect(() => {
-    if (highlightedCompany) {
-      setSelectedNodeId(highlightedCompany)
+    if (highlightedCompanies && highlightedCompanies.length > 0) {
+      setSelectedNodeId(highlightedCompanies[0])
     } else {
       setSelectedNodeId(null)
     }
-  }, [highlightedCompany])
-  
+  }, [highlightedCompanies])
+
   // Custom tooltip without selection button - selection happens on click
-  const customTooltip = ({ node }: { node: ScatterPlotNodeData<BubbleChartData> }) => {
+  const customTooltip = ({
+    node,
+  }: {
+    node: ScatterPlotNodeData<BubbleChartData>
+  }) => {
     console.log('Tooltip triggered for node:', node.data.id)
-    const isSelected = selectedNodeId === node.data.id
+    const isSelected =
+      highlightedCompanies?.includes(node.data.id) ||
+      selectedNodeId === node.data.id
 
     return (
-      <div className={`bubble-chart-tooltip ${tooltipSize !== 'medium' ? tooltipSize : ''}`}>
+      <div
+        className={`bubble-chart-tooltip ${tooltipSize !== 'medium' ? tooltipSize : ''}`}
+      >
         <div className="tooltip-header">
           {node.data.logourl && (
-            <img 
-              src={node.data.logourl} 
+            <img
+              src={node.data.logourl}
               alt={`${node.data.id} logo`}
               className="tooltip-logo"
-              onError={(e) => {
+              onError={e => {
                 e.currentTarget.style.display = 'none'
               }}
             />
           )}
           <div className="tooltip-title">
             {node.data.company.englishName || node.data.id}
-            {isSelected && <span className="text-blue-600 ml-2">(Selected)</span>}
+            {isSelected && (
+              <span className="text-blue-600 ml-2">(Selected)</span>
+            )}
           </div>
         </div>
-        {node.data.company.companyName && node.data.company.companyName !== node.data.company.englishName && (
-          <div className="tooltip-row">
-            <strong>Company Name:</strong> {node.data.company.companyName}
-          </div>
-        )}
+        {node.data.company.companyName &&
+          node.data.company.companyName !== node.data.company.englishName && (
+            <div className="tooltip-row">
+              <strong>Company Name:</strong> {node.data.company.companyName}
+            </div>
+          )}
         {node.data.annualrevenue && (
           <div className="tooltip-row">
-            <strong>Annual Revenue:</strong> ${node.data.annualrevenue.toFixed(0)}B
+            <strong>Annual Revenue:</strong> $
+            {node.data.annualrevenue.toFixed(0)}B
           </div>
         )}
         {node.data.country && (
@@ -371,24 +410,25 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
             <strong>Region:</strong> {node.data.region}
           </div>
         )}
-        
       </div>
     )
   }
-  
+
   console.log('BubbleChart - Input data:', data)
   const transformedData = transformData(data)
   console.log('BubbleChart - Transformed data:', transformedData)
 
   if (transformedData.length === 0) {
     return (
-      <div className="bubble-chart-empty flex items-center justify-center border border-gray-200 rounded-lg bg-gray-50" style={{ height, width }}>
+      <div
+        className="bubble-chart-empty flex items-center justify-center border border-gray-200 rounded-lg bg-gray-50"
+        style={{ height, width }}
+      >
         <div className="text-center text-gray-500">
-          <div className="text-base font-medium mb-2">
-            No Data Available
-          </div>
+          <div className="text-base font-medium mb-2">No Data Available</div>
           <div className="text-sm">
-            Companies need Strategic Fit, Ability to Execute, and Overall Score data
+            Companies need Strategic Fit, Ability to Execute, and Overall Score
+            data
           </div>
         </div>
       </div>
@@ -401,13 +441,15 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
   // Add safety check for data format
   if (!Array.isArray(nivoData) || nivoData.length === 0) {
     return (
-      <div className="bubble-chart-empty flex items-center justify-center border border-gray-200 rounded-lg bg-gray-50" style={{ height, width }}>
+      <div
+        className="bubble-chart-empty flex items-center justify-center border border-gray-200 rounded-lg bg-gray-50"
+        style={{ height, width }}
+      >
         <div className="text-center text-gray-500">
-          <div className="text-base font-medium mb-2">
-            No Data Available
-          </div>
+          <div className="text-base font-medium mb-2">No Data Available</div>
           <div className="text-sm">
-            Companies need Strategic Fit, Ability to Execute, and Overall Score data
+            Companies need Strategic Fit, Ability to Execute, and Overall Score
+            data
           </div>
         </div>
       </div>
@@ -416,7 +458,7 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
 
   return (
     <div
-      className={`bubble-chart-container ${selectedNodeId ? 'has-selection' : ''}`}
+      className={`bubble-chart-container ${(highlightedCompanies && highlightedCompanies.length > 0) || selectedNodeId ? 'has-selection' : ''}`}
       style={{ height: '100%', width: '100%' }}
       data-selected-node={selectedNodeId || ''}
     >
@@ -433,7 +475,7 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
         blendMode={blendMode}
         gridXValues={[0, 5, 10]}
         gridYValues={[0, 5, 10]}
-        colors={(d) => {
+        colors={d => {
           console.log('Colors function called with:', d)
           // Find the color for this series from our data
           const series = transformedData.find(s => s.id === d.serieId)
@@ -441,7 +483,10 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
 
           // For highlighting, we'll rely on the nodeSize function since colors function
           // doesn't have access to individual node data in a reliable way
-          if (highlightedCompany) {
+          if (
+            (highlightedCompanies && highlightedCompanies.length > 0) ||
+            highlightedCompany
+          ) {
             // Dim all nodes slightly when one is highlighted
             return baseColor + 'CC' // Add 80% opacity
           }
@@ -459,10 +504,16 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
           () => {
             // Use useEffect or setTimeout to add attributes after nodes are rendered
             setTimeout(() => {
-              const circles = document.querySelectorAll('.bubble-chart-container circle')
+              const circles = document.querySelectorAll(
+                '.bubble-chart-container circle'
+              )
               circles.forEach((circle, index) => {
                 const node = transformedData.flatMap(s => s.data)[index]
-                if (node && selectedNodeId === node.id) {
+                if (
+                  node &&
+                  (highlightedCompanies?.includes(node.id) ||
+                    selectedNodeId === node.id)
+                ) {
                   circle.setAttribute('data-selected', 'true')
                 } else {
                   circle.removeAttribute('data-selected')
@@ -472,50 +523,73 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
             return null
           },
           // Custom layer to render logos inside circles
-          ...(renderLogos ? [({ nodes, xScale, yScale }: { nodes: ScatterPlotNodeData<BubbleChartData>[]; xScale: AnyScale; yScale: AnyScale }) => {
-            return (
-              <g>
-                {nodes.map((node) => {
-                  if (node.data.logourl) {
-                    const x = xScale(node.data.x)
-                    const y = yScale(node.data.y)
-                    const size = nodeSize || 8
+          ...(renderLogos
+            ? [
+                ({
+                  nodes,
+                  xScale,
+                  yScale,
+                }: {
+                  nodes: ScatterPlotNodeData<BubbleChartData>[]
+                  xScale: AnyScale
+                  yScale: AnyScale
+                }) => {
+                  return (
+                    <g>
+                      {nodes.map(node => {
+                        if (node.data.logourl) {
+                          const x = xScale(node.data.x)
+                          const y = yScale(node.data.y)
+                          const size = nodeSize || 8
 
-                    const isSelected = highlightedCompany === node.data.id
-                    const logoOpacity = highlightedCompany ? (isSelected ? 1 : 0.2) : 1 // 100% when nothing selected, 100% for selected, 20% for others
+                          const isSelected =
+                            highlightedCompanies?.includes(node.data.id) ||
+                            highlightedCompany === node.data.id
+                          const logoOpacity =
+                            (highlightedCompanies &&
+                              highlightedCompanies.length > 0) ||
+                            highlightedCompany
+                              ? isSelected
+                                ? 1
+                                : 0.2
+                              : 1 // 100% when nothing selected, 100% for selected, 20% for others
 
-                    return (
-                      <image
-                        key={node.id}
-                        href={node.data.logourl}
-                        x={x - size * 0.6}
-                        y={y - size * 0.6}
-                        width={size * 1.2}
-                        height={size * 1.2}
-                        style={{
-                          borderRadius: '50%',
-                          pointerEvents: 'none',
-                          opacity: logoOpacity
-                        }}
-                        preserveAspectRatio="xMidYMid slice"
-                        clipPath="circle(50%)"
-                      />
-                    )
-                  }
-                  return null
-                })}
-              </g>
-            )
-          }] : [])
+                          return (
+                            <image
+                              key={node.id}
+                              href={node.data.logourl}
+                              x={x - size * 0.6}
+                              y={y - size * 0.6}
+                              width={size * 1.2}
+                              height={size * 1.2}
+                              style={{
+                                borderRadius: '50%',
+                                pointerEvents: 'none',
+                                opacity: logoOpacity,
+                              }}
+                              preserveAspectRatio="xMidYMid slice"
+                              clipPath="circle(50%)"
+                              aria-label={`${node.data.company.englishName || node.data.id} company logo`}
+                              role="img"
+                            />
+                          )
+                        }
+                        return null
+                      })}
+                    </g>
+                  )
+                },
+              ]
+            : []),
         ]}
-        nodeSize={(node) => {
+        nodeSize={node => {
           const dataSize = node.data.size || 5
 
           console.log('NodeSize calculation:', {
             nodeId: node.data.id,
             dataSize,
             baseSize: nodeSize,
-            overallScore: node.data.company?.overallScore
+            overallScore: node.data.company?.overallScore,
           })
 
           // Use the nodeSize prop directly as the base size, with scaling based on data
@@ -524,11 +598,17 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
           // Apply data-based scaling if we have valid data
           if (dataSize >= 0) {
             // Scale the base size by the data value
-            scaledSize = Math.max(nodeSize * 0.5, Math.min(nodeSize * 2, nodeSize + (dataSize * (nodeSize / 5))))
+            scaledSize = Math.max(
+              nodeSize * 0.5,
+              Math.min(nodeSize * 2, nodeSize + dataSize * (nodeSize / 5))
+            )
           }
 
           // Make highlighted nodes larger
-          if (highlightedCompany && node.data.id === highlightedCompany) {
+          if (
+            highlightedCompanies?.includes(node.data.id) ||
+            highlightedCompany === node.data.id
+          ) {
             scaledSize *= 1.2 // Make highlighted nodes 50% larger
           }
 
@@ -544,7 +624,7 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
         legends={legends}
         theme={theme}
         tooltip={customTooltip}
-        onClick={(node) => {
+        onClick={node => {
           // Toggle selection: if clicking the same node, deselect it
           const nodeId = node.data.id
           const newSelectedId = selectedNodeId === nodeId ? null : nodeId

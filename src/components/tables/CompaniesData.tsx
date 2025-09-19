@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -11,22 +10,17 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
-import { useCompanyOverview } from "../../hooks/useCompanyOverview";
-import type { CompanyOverview } from "../../db/schema";
-import {
-  Filter,
-  MoreHorizontal,
-  Search,
-  Settings2,
-} from "lucide-react";
+} from '@tanstack/react-table'
+import { useCompanyOverview } from '../../hooks/useCompanyOverview'
+import type { CompanyOverview } from '../../db/schema'
+import { Filter, MoreHorizontal, Search, Settings2 } from 'lucide-react'
 
 // UI Components
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { TierBadge } from "@/components/ui/tier-badge";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { TierBadge } from '@/components/ui/tier-badge'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,26 +29,42 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuSeparator,
   DropdownMenuLabel,
-} from "@/components/ui/dropdown-menu";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+} from '@/components/ui/dropdown-menu'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 // Types
-type TableData = CompanyOverview;
+type TableData = CompanyOverview
 
 interface FilterOption {
-  label: string;
-  value: string;
+  label: string
+  value: string
 }
 
 interface ColumnFilterProps {
-  column: Column<TableData, unknown>;
-  title: string;
-  options: FilterOption[];
+  column: Column<TableData, unknown>
+  title: string
+  options: FilterOption[]
 }
 
 // Revenue Filter Component
-function RevenueFilter({ minRevenue, setMinRevenue }: { minRevenue: number | null; setMinRevenue: (value: number | null) => void }) {
+function RevenueFilter({
+  minRevenue,
+  setMinRevenue,
+}: {
+  minRevenue: number | null
+  setMinRevenue: (value: number | null) => void
+}) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -64,7 +74,10 @@ function RevenueFilter({ minRevenue, setMinRevenue }: { minRevenue: number | nul
           {minRevenue !== null && (
             <>
               <div className="ml-2 h-4 w-px bg-border" />
-              <Badge variant="secondary" className="rounded-sm px-1 font-normal">
+              <Badge
+                variant="secondary"
+                className="rounded-sm px-1 font-normal"
+              >
                 ${minRevenue}B+
               </Badge>
             </>
@@ -75,14 +88,16 @@ function RevenueFilter({ minRevenue, setMinRevenue }: { minRevenue: number | nul
         <div className="p-2">
           <div className="space-y-2">
             <div className="space-y-1">
-              <label className="text-sm font-medium">Minimum Revenue (Billions)</label>
+              <label className="text-sm font-medium">
+                Minimum Revenue (Billions)
+              </label>
               <Input
                 type="number"
                 placeholder="Enter minimum revenue"
-                value={minRevenue || ""}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setMinRevenue(value ? parseFloat(value) : null);
+                value={minRevenue || ''}
+                onChange={e => {
+                  const value = e.target.value
+                  setMinRevenue(value ? parseFloat(value) : null)
                 }}
                 min="0"
                 step="0.1"
@@ -104,13 +119,13 @@ function RevenueFilter({ minRevenue, setMinRevenue }: { minRevenue: number | nul
         </div>
       </PopoverContent>
     </Popover>
-  );
+  )
 }
 
 // Column Filter Component
 function ColumnFilter({ column, title, options }: ColumnFilterProps) {
-  const facets = column?.getFacetedUniqueValues();
-  const selectedValues = new Set(column?.getFilterValue() as string[]);
+  const facets = column?.getFacetedUniqueValues()
+  const selectedValues = new Set(column?.getFilterValue() as string[])
 
   return (
     <Popover>
@@ -121,19 +136,29 @@ function ColumnFilter({ column, title, options }: ColumnFilterProps) {
           {selectedValues?.size > 0 && (
             <>
               <div className="ml-2 h-4 w-px bg-border" />
-              <Badge variant="secondary" className="rounded-sm px-1 font-normal lg:hidden">
+              <Badge
+                variant="secondary"
+                className="rounded-sm px-1 font-normal lg:hidden"
+              >
                 {selectedValues.size}
               </Badge>
               <div className="hidden space-x-1 lg:flex">
                 {selectedValues.size > 2 ? (
-                  <Badge variant="secondary" className="rounded-sm px-1 font-normal">
+                  <Badge
+                    variant="secondary"
+                    className="rounded-sm px-1 font-normal"
+                  >
                     {selectedValues.size} selected
                   </Badge>
                 ) : (
                   options
-                    .filter((option) => selectedValues.has(option.value))
-                    .map((option) => (
-                      <Badge variant="secondary" key={option.value} className="rounded-sm px-1 font-normal">
+                    .filter(option => selectedValues.has(option.value))
+                    .map(option => (
+                      <Badge
+                        variant="secondary"
+                        key={option.value}
+                        className="rounded-sm px-1 font-normal"
+                      >
                         {option.label}
                       </Badge>
                     ))
@@ -146,21 +171,23 @@ function ColumnFilter({ column, title, options }: ColumnFilterProps) {
       <PopoverContent className="w-[200px] p-0" align="start">
         <div className="p-2">
           <div className="space-y-2">
-            {options.map((option) => {
-              const isSelected = selectedValues.has(option.value);
+            {options.map(option => {
+              const isSelected = selectedValues.has(option.value)
               return (
                 <div key={option.value} className="flex items-center space-x-2">
                   <Checkbox
                     id={option.value}
                     checked={isSelected}
-                    onCheckedChange={(checked) => {
+                    onCheckedChange={checked => {
                       if (checked) {
-                        selectedValues.add(option.value);
+                        selectedValues.add(option.value)
                       } else {
-                        selectedValues.delete(option.value);
+                        selectedValues.delete(option.value)
                       }
-                      const filterValues = Array.from(selectedValues);
-                      column?.setFilterValue(filterValues.length ? filterValues : undefined);
+                      const filterValues = Array.from(selectedValues)
+                      column?.setFilterValue(
+                        filterValues.length ? filterValues : undefined
+                      )
                     }}
                   />
                   <label
@@ -175,7 +202,7 @@ function ColumnFilter({ column, title, options }: ColumnFilterProps) {
                     )}
                   </label>
                 </div>
-              );
+              )
             })}
           </div>
           {selectedValues.size > 0 && (
@@ -193,13 +220,19 @@ function ColumnFilter({ column, title, options }: ColumnFilterProps) {
         </div>
       </PopoverContent>
     </Popover>
-  );
+  )
 }
 
 // Column Header Component
-function DataTableColumnHeader({ column, title }: { column: Column<TableData, unknown>; title: string }) {
+function DataTableColumnHeader({
+  column,
+  title,
+}: {
+  column: Column<TableData, unknown>
+  title: string
+}) {
   if (!column.getCanSort()) {
-    return <div className="text-left">{title}</div>;
+    return <div className="text-left">{title}</div>
   }
 
   return (
@@ -228,64 +261,72 @@ function DataTableColumnHeader({ column, title }: { column: Column<TableData, un
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  );
+  )
 }
 
 // Main Data Table Component
 function DataTableWithFilters() {
-  const { data, loading, error } = useCompanyOverview();
+  const { data, loading, error } = useCompanyOverview()
 
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [rowSelection, setRowSelection] = useState({});
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [minRevenue, setMinRevenue] = useState<number | null>(null);
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [rowSelection, setRowSelection] = useState({})
+  const [globalFilter, setGlobalFilter] = useState('')
+  const [minRevenue, setMinRevenue] = useState<number | null>(null)
 
   // Load column visibility from localStorage on mount
   const [columnVisibility, setColumnVisibility] = useState(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('companies-table-column-visibility');
-      return saved ? JSON.parse(saved) : {};
+      const saved = localStorage.getItem('companies-table-column-visibility')
+      return saved ? JSON.parse(saved) : {}
     }
-    return {};
-  });
+    return {}
+  })
 
   // Save column visibility changes to localStorage
-  const handleColumnVisibilityChange = (updaterOrValue: Record<string, boolean> | ((old: Record<string, boolean>) => Record<string, boolean>)) => {
-    const newVisibility = typeof updaterOrValue === 'function' 
-      ? updaterOrValue(columnVisibility) 
-      : updaterOrValue;
-    
-    setColumnVisibility(newVisibility);
-    
+  const handleColumnVisibilityChange = (
+    updaterOrValue:
+      | Record<string, boolean>
+      | ((old: Record<string, boolean>) => Record<string, boolean>)
+  ) => {
+    const newVisibility =
+      typeof updaterOrValue === 'function'
+        ? updaterOrValue(columnVisibility)
+        : updaterOrValue
+
+    setColumnVisibility(newVisibility)
+
     if (typeof window !== 'undefined') {
-      localStorage.setItem('companies-table-column-visibility', JSON.stringify(newVisibility));
+      localStorage.setItem(
+        'companies-table-column-visibility',
+        JSON.stringify(newVisibility)
+      )
     }
-  };
+  }
 
   // Reset column visibility to show all columns
   const resetColumnVisibility = () => {
-    const allVisible: Record<string, boolean> = {};
+    const allVisible: Record<string, boolean> = {}
     table.getAllColumns().forEach(column => {
-      allVisible[column.id] = true;
-    });
-    handleColumnVisibilityChange(allVisible);
-  };
+      allVisible[column.id] = true
+    })
+    handleColumnVisibilityChange(allVisible)
+  }
 
   const columns: ColumnDef<TableData>[] = [
     {
-      id: "select",
+      id: 'select',
       header: ({ table }) => (
         <Checkbox
           checked={table.getIsAllPageRowsSelected()}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"
         />
       ),
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          onCheckedChange={value => row.toggleSelected(!!value)}
           aria-label="Select row"
         />
       ),
@@ -293,20 +334,20 @@ function DataTableWithFilters() {
       enableHiding: false,
     },
     {
-      accessorKey: "logoUrl",
+      accessorKey: 'logoUrl',
       header: () => <div className="text-center">Logo</div>,
       cell: ({ row }) => {
-        const logoUrl = row.getValue("logoUrl") as string;
+        const logoUrl = row.getValue('logoUrl') as string
         return (
           <div className="flex justify-center">
             {logoUrl ? (
               <img
                 src={logoUrl}
-                alt={`${row.getValue("englishName") || "Company"} logo`}
+                alt={`${row.getValue('englishName') || 'Company'} logo`}
                 className="h-8 w-8 rounded object-contain"
-                onError={(e) => {
+                onError={e => {
                   // Hide the image if it fails to load
-                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.style.display = 'none'
                 }}
               />
             ) : (
@@ -315,143 +356,169 @@ function DataTableWithFilters() {
               </div>
             )}
           </div>
-        );
+        )
       },
       enableSorting: false,
       enableHiding: true,
     },
     {
-      accessorKey: "englishName",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Company Name" />,
-      cell: ({ row }) => <div className="font-medium">{row.getValue("englishName") || "N/A"}</div>,
+      accessorKey: 'englishName',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Company Name" />
+      ),
+      cell: ({ row }) => (
+        <div className="font-medium">
+          {row.getValue('englishName') || 'N/A'}
+        </div>
+      ),
     },
     {
-      accessorKey: "companyName",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Display Name" />,
-      cell: ({ row }) => <div className="text-muted-foreground">{row.getValue("companyName") || "N/A"}</div>,
+      accessorKey: 'companyName',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Display Name" />
+      ),
+      cell: ({ row }) => (
+        <div className="text-muted-foreground">
+          {row.getValue('companyName') || 'N/A'}
+        </div>
+      ),
     },
     {
-      accessorKey: "country",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Country" />,
-      cell: ({ row }) => <div>{row.getValue("country") || "N/A"}</div>,
+      accessorKey: 'country',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Country" />
+      ),
+      cell: ({ row }) => <div>{row.getValue('country') || 'N/A'}</div>,
       filterFn: (row, id, value) => {
-        return value.includes(row.getValue(id));
+        return value.includes(row.getValue(id))
       },
     },
     {
-      accessorKey: "ceres_region",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Region" />,
-      cell: ({ row }) => <div>{row.getValue("ceres_region") || "N/A"}</div>,
+      accessorKey: 'ceres_region',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Region" />
+      ),
+      cell: ({ row }) => <div>{row.getValue('ceres_region') || 'N/A'}</div>,
       filterFn: (row, id, value) => {
-        return value.includes(row.getValue(id));
+        return value.includes(row.getValue(id))
       },
     },
     {
-      accessorKey: "primaryMarket",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Primary Market" />,
-      cell: ({ row }) => <div>{row.getValue("primaryMarket") || "N/A"}</div>,
+      accessorKey: 'primaryMarket',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Primary Market" />
+      ),
+      cell: ({ row }) => <div>{row.getValue('primaryMarket') || 'N/A'}</div>,
       filterFn: (row, id, value) => {
-        return value.includes(row.getValue(id));
+        return value.includes(row.getValue(id))
       },
     },
     {
-      accessorKey: "businessModel",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Business Model" />,
-      cell: ({ row }) => <div>{row.getValue("businessModel") || "N/A"}</div>,
+      accessorKey: 'businessModel',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Business Model" />
+      ),
+      cell: ({ row }) => <div>{row.getValue('businessModel') || 'N/A'}</div>,
       filterFn: (row, id, value) => {
-        return value.includes(row.getValue(id));
+        return value.includes(row.getValue(id))
       },
     },
     {
-      accessorKey: "Tier",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Tier" />,
+      accessorKey: 'Tier',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Tier" />
+      ),
       cell: ({ row }) => {
-        const tier = row.getValue("Tier") as string;
-        return <TierBadge tier={tier} size="sm" />;
+        const tier = row.getValue('Tier') as string
+        return <TierBadge tier={tier} size="sm" />
       },
       filterFn: (row, id, value) => {
-        return value.includes(row.getValue(id));
+        return value.includes(row.getValue(id))
       },
       size: 120, // Set minimum width for the column
       minSize: 100,
       maxSize: 150,
     },
     {
-      accessorKey: "overallScore",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Overall Score" />,
+      accessorKey: 'overallScore',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Overall Score" />
+      ),
       cell: ({ row }) => {
-        const score = row.getValue("overallScore") as number;
+        const score = row.getValue('overallScore') as number
         return (
           <div className="text-right font-medium">
-            {score ? score.toFixed(1) : "N/A"}
+            {score ? score.toFixed(1) : 'N/A'}
           </div>
-        );
+        )
       },
     },
     {
-      accessorKey: "strategicFit",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Strategic Fit" />,
+      accessorKey: 'strategicFit',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Strategic Fit" />
+      ),
       cell: ({ row }) => {
-        const score = row.getValue("strategicFit") as number;
+        const score = row.getValue('strategicFit') as number
         return (
-          <div className="text-right">
-            {score ? score.toFixed(1) : "N/A"}
-          </div>
-        );
+          <div className="text-right">{score ? score.toFixed(1) : 'N/A'}</div>
+        )
       },
     },
     {
-      accessorKey: "abilityToExecute",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Ability to Execute" />,
+      accessorKey: 'abilityToExecute',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Ability to Execute" />
+      ),
       cell: ({ row }) => {
-        const score = row.getValue("abilityToExecute") as number;
+        const score = row.getValue('abilityToExecute') as number
         return (
-          <div className="text-right">
-            {score ? score.toFixed(1) : "N/A"}
-          </div>
-        );
+          <div className="text-right">{score ? score.toFixed(1) : 'N/A'}</div>
+        )
       },
     },
     {
-      accessorKey: "annual_revenue",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Annual Revenue" />,
+      accessorKey: 'annual_revenue',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Annual Revenue" />
+      ),
       cell: ({ row }) => {
-        const revenue = row.getValue("annual_revenue") as number;
-        if (!revenue) return <div className="text-right">N/A</div>;
+        const revenue = row.getValue('annual_revenue') as number
+        if (!revenue) return <div className="text-right">N/A</div>
         // Format as $XXB (assuming revenue is already in billions)
-        const formatted = `$${revenue.toFixed(0)}B`;
-        return <div className="text-right font-medium">{formatted}</div>;
+        const formatted = `$${revenue.toFixed(0)}B`
+        return <div className="text-right font-medium">{formatted}</div>
       },
     },
     {
-      accessorKey: "finance_score",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Finance Score" />,
+      accessorKey: 'finance_score',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Finance Score" />
+      ),
       cell: ({ row }) => {
-        const score = row.getValue("finance_score") as number;
+        const score = row.getValue('finance_score') as number
         return (
-          <div className="text-right">
-            {score ? score.toFixed(1) : "N/A"}
-          </div>
-        );
+          <div className="text-right">{score ? score.toFixed(1) : 'N/A'}</div>
+        )
       },
     },
     {
-      accessorKey: "H2Score",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="H2 Score" />,
+      accessorKey: 'H2Score',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="H2 Score" />
+      ),
       cell: ({ row }) => {
-        const score = row.getValue("H2Score") as number;
+        const score = row.getValue('H2Score') as number
         return (
-          <div className="text-right">
-            {score ? score.toFixed(1) : "N/A"}
-          </div>
-        );
+          <div className="text-right">{score ? score.toFixed(1) : 'N/A'}</div>
+        )
       },
     },
     {
-      id: "actions",
+      id: 'actions',
       enableHiding: false,
       cell: ({ row }) => {
-        const item = row.original;
+        const item = row.original
 
         return (
           <DropdownMenu>
@@ -463,28 +530,34 @@ function DataTableWithFilters() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => navigator.clipboard.writeText(item.key?.toString() || "")}>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigator.clipboard.writeText(item.key?.toString() || '')
+                }
+              >
                 Copy ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>View details</DropdownMenuItem>
               <DropdownMenuItem>Edit</DropdownMenuItem>
-              <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+              <DropdownMenuItem className="text-destructive">
+                Delete
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        );
+        )
       },
     },
-  ];
+  ]
 
   // Filter data based on minimum revenue
   const filteredData = React.useMemo(() => {
-    if (minRevenue === null) return data;
+    if (minRevenue === null) return data
     return data.filter(item => {
-      const revenue = item.annual_revenue;
-      return revenue && revenue >= minRevenue;
-    });
-  }, [data, minRevenue]);
+      const revenue = item.annual_revenue
+      return revenue && revenue >= minRevenue
+    })
+  }, [data, minRevenue])
 
   const table = useReactTable({
     data: filteredData,
@@ -498,9 +571,9 @@ function DataTableWithFilters() {
     onColumnVisibilityChange: handleColumnVisibilityChange,
     onRowSelectionChange: setRowSelection,
     onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: "includesString",
+    globalFilterFn: 'includesString',
     enableColumnResizing: true,
-    columnResizeMode: "onChange",
+    columnResizeMode: 'onChange',
     state: {
       sorting,
       columnFilters,
@@ -508,23 +581,29 @@ function DataTableWithFilters() {
       rowSelection,
       globalFilter,
     },
-  });
+  })
 
   // Dynamically generate filter options from actual data
   const tierOptions: FilterOption[] = React.useMemo(() => {
-    const tiers = Array.from(new Set(data.map(item => item.Tier).filter(Boolean)));
-    return tiers.map(tier => ({ label: tier!, value: tier! }));
-  }, [data]);
+    const tiers = Array.from(
+      new Set(data.map(item => item.Tier).filter(Boolean))
+    )
+    return tiers.map(tier => ({ label: tier!, value: tier! }))
+  }, [data])
 
   const regionOptions: FilterOption[] = React.useMemo(() => {
-    const regions = Array.from(new Set(data.map(item => item.ceres_region).filter(Boolean)));
-    return regions.map(region => ({ label: region!, value: region! }));
-  }, [data]);
+    const regions = Array.from(
+      new Set(data.map(item => item.ceres_region).filter(Boolean))
+    )
+    return regions.map(region => ({ label: region!, value: region! }))
+  }, [data])
 
   const marketOptions: FilterOption[] = React.useMemo(() => {
-    const markets = Array.from(new Set(data.map(item => item.primaryMarket).filter(Boolean)));
-    return markets.map(market => ({ label: market!, value: market! }));
-  }, [data]);
+    const markets = Array.from(
+      new Set(data.map(item => item.primaryMarket).filter(Boolean))
+    )
+    return markets.map(market => ({ label: market!, value: market! }))
+  }, [data])
 
   if (loading) {
     return (
@@ -533,7 +612,7 @@ function DataTableWithFilters() {
           <div className="text-muted-foreground">Loading companies...</div>
         </div>
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -543,7 +622,7 @@ function DataTableWithFilters() {
           <div className="text-destructive">Error: {error}</div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -555,33 +634,36 @@ function DataTableWithFilters() {
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search all columns..."
-              value={globalFilter ?? ""}
-              onChange={(event) => setGlobalFilter(String(event.target.value))}
+              value={globalFilter ?? ''}
+              onChange={event => setGlobalFilter(String(event.target.value))}
               className="pl-8 max-w-sm"
             />
           </div>
-          {table.getColumn("Tier") && (
+          {table.getColumn('Tier') && (
             <ColumnFilter
-              column={table.getColumn("Tier")!}
+              column={table.getColumn('Tier')!}
               title="Tier"
               options={tierOptions}
             />
           )}
-          {table.getColumn("ceres_region") && (
+          {table.getColumn('ceres_region') && (
             <ColumnFilter
-              column={table.getColumn("ceres_region")!}
+              column={table.getColumn('ceres_region')!}
               title="Region"
               options={regionOptions}
             />
           )}
-          {table.getColumn("primaryMarket") && (
+          {table.getColumn('primaryMarket') && (
             <ColumnFilter
-              column={table.getColumn("primaryMarket")!}
+              column={table.getColumn('primaryMarket')!}
               title="Market"
               options={marketOptions}
             />
           )}
-          <RevenueFilter minRevenue={minRevenue} setMinRevenue={setMinRevenue} />
+          <RevenueFilter
+            minRevenue={minRevenue}
+            setMinRevenue={setMinRevenue}
+          />
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -593,24 +675,31 @@ function DataTableWithFilters() {
           <DropdownMenuContent align="end" className="w-[150px]">
             <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={resetColumnVisibility} className="text-sm">
+            <DropdownMenuItem
+              onClick={resetColumnVisibility}
+              className="text-sm"
+            >
               Show all columns
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             {table
               .getAllColumns()
-              .filter((column) => typeof column.accessorFn !== "undefined" && column.getCanHide())
-              .map((column) => {
+              .filter(
+                column =>
+                  typeof column.accessorFn !== 'undefined' &&
+                  column.getCanHide()
+              )
+              .map(column => {
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
                     className="capitalize"
                     checked={column.getIsVisible()}
-                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                    onCheckedChange={value => column.toggleVisibility(!!value)}
                   >
                     {column.id}
                   </DropdownMenuCheckboxItem>
-                );
+                )
               })}
           </DropdownMenuContent>
         </DropdownMenu>
@@ -621,20 +710,23 @@ function DataTableWithFilters() {
         <div className="relative max-h-[600px] overflow-auto">
           <table className="w-full caption-bottom text-sm">
             <thead className="sticky top-0 z-20 bg-background shadow-sm [&_tr]:border-b">
-              {table.getHeaderGroups().map((headerGroup) => (
+              {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id} className="border-b">
-                  {headerGroup.headers.map((header) => {
+                  {headerGroup.headers.map(header => {
                     return (
-                      <th 
-                        key={header.id} 
+                      <th
+                        key={header.id}
                         className="h-12 px-4 text-left align-middle font-semibold text-muted-foreground bg-muted/50 [&:has([role=checkbox])]:pr-0"
                         style={{ width: header.getSize() }}
                       >
                         {header.isPlaceholder
                           ? null
-                          : flexRender(header.column.columnDef.header, header.getContext())}
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                       </th>
-                    );
+                    )
                   })}
                 </tr>
               ))}
@@ -642,21 +734,31 @@ function DataTableWithFilters() {
             <tbody className="[&_tr:last-child]:border-0">
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row, index) => (
-                  <tr 
-                    key={row.id} 
-                    data-state={row.getIsSelected() && "selected"}
+                  <tr
+                    key={row.id}
+                    data-state={row.getIsSelected() && 'selected'}
                     className={`border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted ${index % 2 === 0 ? 'bg-background' : 'bg-muted/20'} hover:bg-muted/50 transition-colors`}
                   >
-                    {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className="p-4 align-middle [&:has([role=checkbox])]:pr-0 py-3" style={{ width: cell.column.getSize() }}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    {row.getVisibleCells().map(cell => (
+                      <td
+                        key={cell.id}
+                        className="p-4 align-middle [&:has([role=checkbox])]:pr-0 py-3"
+                        style={{ width: cell.column.getSize() }}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
                       </td>
                     ))}
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={columns.length} className="h-24 text-center p-4 align-middle [&:has([role=checkbox])]:pr-0">
+                  <td
+                    colSpan={columns.length}
+                    className="h-24 text-center p-4 align-middle [&:has([role=checkbox])]:pr-0"
+                  >
                     No results.
                   </td>
                 </tr>
@@ -669,7 +771,7 @@ function DataTableWithFilters() {
       {/* Pagination */}
       <div className="flex items-center justify-between space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
         <div className="flex items-center space-x-6 lg:space-x-8">
@@ -677,15 +779,17 @@ function DataTableWithFilters() {
             <p className="text-sm font-medium">Rows per page</p>
             <Select
               value={`${table.getState().pagination.pageSize}`}
-              onValueChange={(value) => {
-                table.setPageSize(Number(value));
+              onValueChange={value => {
+                table.setPageSize(Number(value))
               }}
             >
               <SelectTrigger className="h-8 w-[70px]">
-                <SelectValue placeholder={table.getState().pagination.pageSize} />
+                <SelectValue
+                  placeholder={table.getState().pagination.pageSize}
+                />
               </SelectTrigger>
               <SelectContent side="top">
-                {[10, 20, 30, 40, 50].map((pageSize) => (
+                {[10, 20, 30, 40, 50].map(pageSize => (
                   <SelectItem key={pageSize} value={`${pageSize}`}>
                     {pageSize}
                   </SelectItem>
@@ -694,7 +798,8 @@ function DataTableWithFilters() {
             </Select>
           </div>
           <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+            Page {table.getState().pagination.pageIndex + 1} of{' '}
+            {table.getPageCount()}
           </div>
           <div className="flex items-center space-x-2">
             <Button
@@ -719,7 +824,7 @@ function DataTableWithFilters() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export default function CompaniesData() {
@@ -727,5 +832,5 @@ export default function CompaniesData() {
     <div className="container mx-auto py-10">
       <DataTableWithFilters />
     </div>
-  );
+  )
 }

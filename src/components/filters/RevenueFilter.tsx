@@ -2,7 +2,11 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { Filter } from 'lucide-react'
 
 interface RevenueFilterProps {
@@ -14,7 +18,7 @@ interface RevenueFilterProps {
 export function RevenueFilter({
   minRevenue,
   onValueChange,
-  className = ""
+  className = '',
 }: RevenueFilterProps) {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -31,13 +35,20 @@ export function RevenueFilter({
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className={`h-8 border-dashed ${className}`}>
+        <Button
+          variant="outline"
+          size="sm"
+          className={`h-8 border-dashed ${className}`}
+        >
           <Filter className="mr-2 h-4 w-4" />
           Min Revenue
           {minRevenue !== null && (
             <>
               <div className="ml-2 h-4 w-px bg-border" />
-              <Badge variant="secondary" className="rounded-sm px-1 font-normal">
+              <Badge
+                variant="secondary"
+                className="rounded-sm px-1 font-normal"
+              >
                 ${minRevenue}B+
               </Badge>
             </>
@@ -48,12 +59,14 @@ export function RevenueFilter({
         <div className="p-2">
           <div className="space-y-2">
             <div className="space-y-1">
-              <label className="text-sm font-medium">Minimum Revenue (Billions)</label>
+              <label className="text-sm font-medium">
+                Minimum Revenue (Billions)
+              </label>
               <Input
                 type="number"
                 placeholder="Enter minimum revenue"
-                value={minRevenue || ""}
-                onChange={(e) => handleValueChange(e.target.value)}
+                value={minRevenue || ''}
+                onChange={e => handleValueChange(e.target.value)}
                 min="0"
                 step="0.1"
               />

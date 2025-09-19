@@ -12,7 +12,7 @@ export function useCompanyOverview() {
       try {
         setLoading(true)
         setError(null)
-        
+
         const { data: companyData, error: fetchError } = await supabase
           .from('company_overview')
           .select('*')

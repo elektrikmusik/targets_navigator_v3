@@ -1,6 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { CompaniesDataWithChart } from './CompaniesDataWithChart'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -13,9 +19,8 @@ import {
   Settings,
   AlertCircle,
   CheckCircle2,
-  Eye
+  Eye,
 } from 'lucide-react'
-
 
 const meta: Meta<typeof CompaniesDataWithChart> = {
   title: 'Integrated/CompaniesDataWithChart',
@@ -185,9 +190,12 @@ export const Default: Story = {
     <div className="space-y-6">
       {/* Header */}
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Companies Strategic Dashboard</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          Companies Strategic Dashboard
+        </h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Interactive visualization of company positioning with synchronized table and chart views
+          Interactive visualization of company positioning with synchronized
+          table and chart views
         </p>
       </div>
 
@@ -199,7 +207,8 @@ export const Default: Story = {
             <span>Interactive Companies Analysis</span>
           </CardTitle>
           <CardDescription>
-            Click on table rows or chart bubbles to explore company positioning. Use filters to narrow down your analysis.
+            Click on table rows or chart bubbles to explore company positioning.
+            Use filters to narrow down your analysis.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -217,7 +226,9 @@ export const EnhancedInstructions: Story = {
     <div className="space-y-6">
       {/* Header */}
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Getting Started Guide</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          Getting Started Guide
+        </h1>
         <p className="text-muted-foreground">
           Learn how to use the Companies Data with Interactive Chart dashboard
         </p>
@@ -226,15 +237,24 @@ export const EnhancedInstructions: Story = {
       {/* Interactive Guide */}
       <Tabs defaultValue="interactions" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="interactions" className="flex items-center space-x-2">
+          <TabsTrigger
+            value="interactions"
+            className="flex items-center space-x-2"
+          >
             <Eye className="h-4 w-4" />
             <span>Interactions</span>
           </TabsTrigger>
-          <TabsTrigger value="filtering" className="flex items-center space-x-2">
+          <TabsTrigger
+            value="filtering"
+            className="flex items-center space-x-2"
+          >
             <Filter className="h-4 w-4" />
             <span>Filtering</span>
           </TabsTrigger>
-          <TabsTrigger value="visualization" className="flex items-center space-x-2">
+          <TabsTrigger
+            value="visualization"
+            className="flex items-center space-x-2"
+          >
             <BarChart3 className="h-4 w-4" />
             <span>Visualization</span>
           </TabsTrigger>
@@ -260,7 +280,8 @@ export const EnhancedInstructions: Story = {
                     <span className="font-medium">Table to Chart</span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Click on company names or checkboxes in the table to highlight corresponding bubbles in the chart.
+                    Click on company names or checkboxes in the table to
+                    highlight corresponding bubbles in the chart.
                   </p>
                 </div>
                 <div className="p-4 border rounded-lg space-y-2">
@@ -269,7 +290,8 @@ export const EnhancedInstructions: Story = {
                     <span className="font-medium">Chart to Table</span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Click on any bubble in the chart to automatically highlight the corresponding row in the table.
+                    Click on any bubble in the chart to automatically highlight
+                    the corresponding row in the table.
                   </p>
                 </div>
               </div>
@@ -293,7 +315,8 @@ export const EnhancedInstructions: Story = {
                     <span className="font-medium">Global Search</span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Search across all company fields including names, countries, and business models.
+                    Search across all company fields including names, countries,
+                    and business models.
                   </p>
                 </div>
                 <div className="p-4 border rounded-lg space-y-2">
@@ -302,7 +325,8 @@ export const EnhancedInstructions: Story = {
                     <span className="font-medium">Category Filters</span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Filter by tier, region, market, and business model using the dropdown filters.
+                    Filter by tier, region, market, and business model using the
+                    dropdown filters.
                   </p>
                 </div>
                 <div className="p-4 border rounded-lg space-y-2">
@@ -311,7 +335,8 @@ export const EnhancedInstructions: Story = {
                     <span className="font-medium">Revenue Filters</span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Set minimum revenue thresholds to focus on companies of specific sizes.
+                    Set minimum revenue thresholds to focus on companies of
+                    specific sizes.
                   </p>
                 </div>
               </div>
@@ -334,7 +359,8 @@ export const EnhancedInstructions: Story = {
                     <span className="font-medium">X-Axis</span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    <strong>Strategic Fit</strong> - How well the company aligns with strategic goals (0-10 scale)
+                    <strong>Strategic Fit</strong> - How well the company aligns
+                    with strategic goals (0-10 scale)
                   </p>
                 </div>
                 <div className="p-4 border rounded-lg space-y-2">
@@ -342,7 +368,8 @@ export const EnhancedInstructions: Story = {
                     <span className="font-medium">Y-Axis</span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    <strong>Ability to Execute</strong> - Company's execution capability (0-10 scale)
+                    <strong>Ability to Execute</strong> - Company&apos;s
+                    execution capability (0-10 scale)
                   </p>
                 </div>
                 <div className="p-4 border rounded-lg space-y-2">
@@ -350,7 +377,8 @@ export const EnhancedInstructions: Story = {
                     <span className="font-medium">Bubble Size</span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    <strong>Overall Score</strong> - Larger bubbles indicate higher overall scores
+                    <strong>Overall Score</strong> - Larger bubbles indicate
+                    higher overall scores
                   </p>
                 </div>
               </div>
@@ -374,7 +402,8 @@ export const EnhancedInstructions: Story = {
                     <span className="font-medium">Column Management</span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Use the "View" button to show/hide columns and customize your table layout.
+                    Use the &quot;View&quot; button to show/hide columns and
+                    customize your table layout.
                   </p>
                 </div>
                 <div className="p-4 border rounded-lg space-y-2">
@@ -383,7 +412,8 @@ export const EnhancedInstructions: Story = {
                     <span className="font-medium">Responsive Design</span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    The dashboard adapts to different screen sizes with optimized layouts for mobile, tablet, and desktop.
+                    The dashboard adapts to different screen sizes with
+                    optimized layouts for mobile, tablet, and desktop.
                   </p>
                 </div>
               </div>
@@ -446,7 +476,10 @@ export const LoadingState: Story = {
               <div className="h-8 w-full bg-muted rounded animate-pulse" />
               <div className="space-y-2">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className="h-12 w-full bg-muted rounded animate-pulse" />
+                  <div
+                    key={i}
+                    className="h-12 w-full bg-muted rounded animate-pulse"
+                  />
                 ))}
               </div>
             </div>
@@ -455,7 +488,9 @@ export const LoadingState: Story = {
             <div className="h-96 flex items-center justify-center">
               <div className="text-center space-y-2">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-                <p className="text-muted-foreground">Loading visualization...</p>
+                <p className="text-muted-foreground">
+                  Loading visualization...
+                </p>
               </div>
             </div>
           </div>
@@ -482,9 +517,12 @@ export const ErrorState: Story = {
           <div className="flex items-center space-x-2">
             <AlertCircle className="h-4 w-4 text-destructive" />
             <div>
-              <h3 className="font-semibold text-destructive">Failed to Load Data</h3>
+              <h3 className="font-semibold text-destructive">
+                Failed to Load Data
+              </h3>
               <p className="text-sm text-destructive/80">
-                We encountered an error while loading the company data. Please check your internet connection and try again.
+                We encountered an error while loading the company data. Please
+                check your internet connection and try again.
               </p>
             </div>
           </div>
@@ -506,18 +544,30 @@ export const ErrorState: Story = {
             <div className="flex items-center justify-center h-96 bg-red-50 rounded-lg">
               <div className="text-center space-y-2">
                 <AlertCircle className="h-12 w-12 text-red-500 mx-auto" />
-                <p className="text-lg font-medium text-red-700">Error Loading Data</p>
+                <p className="text-lg font-medium text-red-700">
+                  Error Loading Data
+                </p>
                 <p className="text-sm text-red-600 max-w-md">
-                  There was a problem connecting to the data source. Please check your connection and try again.
+                  There was a problem connecting to the data source. Please
+                  check your connection and try again.
                 </p>
                 <div className="flex space-x-2 justify-center mt-4">
-                  <button type="button" className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3">
+                  <button
+                    type="button"
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3"
+                  >
                     Retry
                   </button>
-                  <button type="button" className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3">
+                  <button
+                    type="button"
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3"
+                  >
                     Refresh
                   </button>
-                  <button type="button" className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3">
+                  <button
+                    type="button"
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3"
+                  >
                     Contact Support
                   </button>
                 </div>
@@ -549,7 +599,8 @@ export const EmptyState: Story = {
             <span>No Companies Found</span>
           </CardTitle>
           <CardDescription>
-            No company data matches your current filters or there are no companies available
+            No company data matches your current filters or there are no
+            companies available
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -567,14 +618,14 @@ export const EmptyState: Story = {
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <button
-                  className="h-8 px-3 text-sm border border-input rounded-md bg-background text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="h-8 px-3 text-sm border border-input rounded-md bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled
                 >
                   <Filter className="mr-2 h-4 w-4" />
                   Tier
                 </button>
                 <button
-                  className="h-8 px-3 text-sm border border-input rounded-md bg-background text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="h-8 px-3 text-sm border border-input rounded-md bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled
                 >
                   <Filter className="mr-2 h-4 w-4" />
@@ -589,15 +640,24 @@ export const EmptyState: Story = {
                 <div className="mx-auto h-12 w-12 text-muted-foreground mb-4">
                   <BarChart3 className="h-full w-full" />
                 </div>
-                <h3 className="text-lg font-medium text-muted-foreground mb-2">No Companies Found</h3>
+                <h3 className="text-lg font-medium text-muted-foreground mb-2">
+                  No Companies Found
+                </h3>
                 <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                  Try adjusting your filters or search terms to see company results.
+                  Try adjusting your filters or search terms to see company
+                  results.
                 </p>
                 <div className="flex space-x-2 justify-center mt-4">
-                  <button type="button" className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3">
+                  <button
+                    type="button"
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3"
+                  >
                     Clear Filters
                   </button>
-                  <button type="button" className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3">
+                  <button
+                    type="button"
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3"
+                  >
                     Reset Search
                   </button>
                 </div>
@@ -610,7 +670,9 @@ export const EmptyState: Story = {
                 <div className="mx-auto h-12 w-12 text-muted-foreground mb-4">
                   <BarChart3 className="h-full w-full" />
                 </div>
-                <p className="text-lg font-medium text-muted-foreground">No Data to Display</p>
+                <p className="text-lg font-medium text-muted-foreground">
+                  No Data to Display
+                </p>
                 <p className="text-sm text-muted-foreground max-w-md mx-auto">
                   Add company data or adjust filters to see the visualization
                 </p>
@@ -768,7 +830,9 @@ export const DarkMode: Story = {
   render: () => (
     <div className="dark space-y-6">
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Dark Mode Dashboard</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          Dark Mode Dashboard
+        </h1>
         <p className="text-muted-foreground">
           Elegant dark theme optimized for low-light environments
         </p>
@@ -792,7 +856,9 @@ export const DarkMode: Story = {
             <div className="flex items-center space-x-2">
               <Users className="h-4 w-4 text-green-500" />
               <div>
-                <p className="text-sm text-muted-foreground">Tier 1 Companies</p>
+                <p className="text-sm text-muted-foreground">
+                  Tier 1 Companies
+                </p>
                 <p className="text-2xl font-bold">24</p>
               </div>
             </div>
@@ -830,7 +896,8 @@ export const DarkMode: Story = {
             <span>Dark Mode Dashboard</span>
           </CardTitle>
           <CardDescription>
-            Experience the enhanced visibility and reduced eye strain of dark mode
+            Experience the enhanced visibility and reduced eye strain of dark
+            mode
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -847,7 +914,9 @@ export const PerformanceOptimized: Story = {
   render: () => (
     <div className="space-y-6">
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Performance Optimized</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          Performance Optimized
+        </h1>
         <p className="text-muted-foreground">
           Demonstrating performance features and optimizations
         </p>
@@ -870,11 +939,15 @@ export const PerformanceOptimized: Story = {
               <div className="space-y-2">
                 <div className="flex items-center space-x-2 text-green-600">
                   <CheckCircle2 className="h-4 w-4" />
-                  <span className="text-sm">Virtual scrolling for large datasets</span>
+                  <span className="text-sm">
+                    Virtual scrolling for large datasets
+                  </span>
                 </div>
                 <div className="flex items-center space-x-2 text-green-600">
                   <CheckCircle2 className="h-4 w-4" />
-                  <span className="text-sm">Memoized components to prevent re-renders</span>
+                  <span className="text-sm">
+                    Memoized components to prevent re-renders
+                  </span>
                 </div>
                 <div className="flex items-center space-x-2 text-green-600">
                   <CheckCircle2 className="h-4 w-4" />
@@ -921,9 +994,12 @@ export const ChartFocused: Story = {
   render: () => (
     <div className="space-y-6">
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Strategic Positioning Analysis</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          Strategic Positioning Analysis
+        </h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Interactive bubble chart visualization showing company strategic positioning across different dimensions
+          Interactive bubble chart visualization showing company strategic
+          positioning across different dimensions
         </p>
       </div>
 
@@ -934,18 +1010,29 @@ export const ChartFocused: Story = {
             <span>Company Strategic Map</span>
           </CardTitle>
           <CardDescription>
-            X-axis: Strategic Fit | Y-axis: Ability to Execute | Bubble Size: Overall Score
+            X-axis: Strategic Fit | Y-axis: Ability to Execute | Bubble Size:
+            Overall Score
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {/* Chart Legend */}
             <div className="flex flex-wrap gap-2 justify-center">
-              <Badge variant="outline" className="bg-[#e87722] text-white">Tier 1</Badge>
-              <Badge variant="outline" className="bg-[#ffb500] text-white">Tier 2</Badge>
-              <Badge variant="outline" className="bg-[#59315f] text-white">Tier 3</Badge>
-              <Badge variant="outline" className="bg-[#6e3fa3] text-white">Tier 4</Badge>
-              <Badge variant="outline" className="bg-[#00b398] text-white">Partner</Badge>
+              <Badge variant="outline" className="bg-[#e87722] text-white">
+                Tier 1
+              </Badge>
+              <Badge variant="outline" className="bg-[#ffb500] text-white">
+                Tier 2
+              </Badge>
+              <Badge variant="outline" className="bg-[#59315f] text-white">
+                Tier 3
+              </Badge>
+              <Badge variant="outline" className="bg-[#6e3fa3] text-white">
+                Tier 4
+              </Badge>
+              <Badge variant="outline" className="bg-[#00b398] text-white">
+                Partner
+              </Badge>
             </div>
             <CompaniesDataWithChart />
           </div>
@@ -961,7 +1048,9 @@ export const AccessibilityFocused: Story = {
   render: () => (
     <div className="space-y-6">
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Accessibility Compliant</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          Accessibility Compliant
+        </h1>
         <p className="text-muted-foreground">
           WCAG 2.1 AA compliant design with full keyboard navigation
         </p>
@@ -980,7 +1069,9 @@ export const AccessibilityFocused: Story = {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">♿ WCAG 2.1 AA Compliance</h3>
+              <h3 className="text-lg font-semibold">
+                ♿ WCAG 2.1 AA Compliance
+              </h3>
               <div className="space-y-2">
                 <div className="flex items-center space-x-2 text-green-600">
                   <CheckCircle2 className="h-4 w-4" />
@@ -1005,11 +1096,15 @@ export const AccessibilityFocused: Story = {
               <div className="space-y-2">
                 <div className="flex items-center space-x-2 text-blue-600">
                   <span className="text-sm font-medium">Tab Navigation:</span>
-                  <span className="text-sm">Navigate through all interactive elements</span>
+                  <span className="text-sm">
+                    Navigate through all interactive elements
+                  </span>
                 </div>
                 <div className="flex items-center space-x-2 text-blue-600">
                   <span className="text-sm font-medium">Space/Enter:</span>
-                  <span className="text-sm">Activate buttons and selections</span>
+                  <span className="text-sm">
+                    Activate buttons and selections
+                  </span>
                 </div>
                 <div className="flex items-center space-x-2 text-blue-600">
                   <span className="text-sm font-medium">Arrow Keys:</span>
@@ -1027,10 +1122,13 @@ export const AccessibilityFocused: Story = {
               <div className="flex items-start space-x-2">
                 <AlertCircle className="h-4 w-4 text-muted-foreground mt-0.5" />
                 <div>
-                  <h3 className="font-semibold text-muted-foreground">Keyboard Navigation Tip</h3>
+                  <h3 className="font-semibold text-muted-foreground">
+                    Keyboard Navigation Tip
+                  </h3>
                   <p className="text-sm text-muted-foreground">
-                    Use Tab to navigate between elements, Space/Enter to select, and Arrow keys to navigate through table rows.
-                    All interactive elements are fully accessible via keyboard.
+                    Use Tab to navigate between elements, Space/Enter to select,
+                    and Arrow keys to navigate through table rows. All
+                    interactive elements are fully accessible via keyboard.
                   </p>
                 </div>
               </div>

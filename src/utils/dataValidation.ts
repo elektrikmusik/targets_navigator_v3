@@ -57,7 +57,9 @@ export const logDataInfo = (data: unknown, label: string = 'Data') => {
   if (validation.isValid) {
     console.log('✅ Data is valid')
     const dataObj = data as Record<string, unknown>
-    console.log(`📊 Features count: ${Array.isArray(dataObj.features) ? dataObj.features.length : 0}`)
+    console.log(
+      `📊 Features count: ${Array.isArray(dataObj.features) ? dataObj.features.length : 0}`
+    )
     console.log(`📏 Data size: ${JSON.stringify(data).length} characters`)
   } else {
     console.error('❌ Data validation failed:')

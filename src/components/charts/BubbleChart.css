@@ -29,20 +29,22 @@
 }
 
 /* Keep selected node fully visible */
-.bubble-chart-container.has-selection circle[data-selected="true"] {
+.bubble-chart-container.has-selection circle[data-selected='true'] {
   opacity: 1 !important;
 }
 
 /* Custom tooltip styling */
 .bubble-chart-tooltip {
   background: white;
-  padding: 16px;  /* Increased padding for larger tooltip */
+  padding: 16px; /* Increased padding for larger tooltip */
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  max-width: 500px;  /* Increased max width */
-  min-width: 300px;  /* Added minimum width */
-  font-size: 14px;   /* Increased font size */
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  max-width: 500px; /* Increased max width */
+  min-width: 300px; /* Added minimum width */
+  font-size: 14px; /* Increased font size */
   z-index: 1000;
 }
 

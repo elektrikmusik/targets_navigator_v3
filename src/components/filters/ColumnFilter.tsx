@@ -2,7 +2,11 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { Filter } from 'lucide-react'
 import type { FilterOption } from '@/hooks/useCompanyFilters'
 
@@ -23,7 +27,7 @@ export function ColumnFilter({
   onValueChange,
   onClear,
   facets,
-  className = ""
+  className = '',
 }: ColumnFilterProps) {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -48,13 +52,20 @@ export function ColumnFilter({
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className={`h-8 border-dashed ${className}`}>
+        <Button
+          variant="outline"
+          size="sm"
+          className={`h-8 border-dashed ${className}`}
+        >
           <Filter className="mr-2 h-4 w-4" />
           {title}
           {selectedCount > 0 && (
             <>
               <div className="ml-2 h-4 w-px bg-border" />
-              <Badge variant="secondary" className="rounded-sm px-1 font-normal">
+              <Badge
+                variant="secondary"
+                className="rounded-sm px-1 font-normal"
+              >
                 {selectedCount}
               </Badge>
             </>
@@ -64,7 +75,7 @@ export function ColumnFilter({
       <PopoverContent className="w-[200px] p-0" align="start">
         <div className="p-2">
           <div className="space-y-2 max-h-60 overflow-y-auto">
-            {options.map((option) => {
+            {options.map(option => {
               const isSelected = selectedValues.includes(option.value)
               const count = facets?.get(option.value)
 
@@ -73,7 +84,9 @@ export function ColumnFilter({
                   <Checkbox
                     id={option.value}
                     checked={isSelected}
-                    onCheckedChange={(checked) => handleValueChange(option.value, !!checked)}
+                    onCheckedChange={checked =>
+                      handleValueChange(option.value, !!checked)
+                    }
                   />
                   <label
                     htmlFor={option.value}
